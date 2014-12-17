@@ -1,51 +1,44 @@
 <?php
-    $time_start = microtime(true);
-    
-    @session_start();
-    $cache_age = 1; // Seconds
-    header('Cache-control: must-revalidate', false);
-    header('Cache-control: max-age='.$cache_age, false);
-    header( 'Expires: '.date( 'r', time() + $cache_age ) );
-    
-    $missions = include('missions.php');
+    $content = 'Some fancy, PHP magic here.';
 ?>
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
 <head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	
     <meta charset="utf-8" />
     <meta name="msapplication-config" content="none"/>
-    <title>KSP Mission Overview Generator</title>
-    <link rel="stylesheet" type="text/css" href="missions.css"/>
-    <script src="jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="missions.js"></script>
-    <style type="text/css">
-        *{
-            border:0px solid black;
-        }
-        fieldset{
-            border-width:1px;
-        }
-    </style>
+    <meta name="description" content="Example PHP/HTML Page"/>
+    <meta name="author" content="Ezriilc"/>
+    <meta name="keywords" content="php, web page, example"/>
+	
+	<script type="text/javascript" src="MPN.js"></script>
+	<script type="text/javascript" src="Draw.js"></script>
+	<script type="text/javascript" src="LocateMouse.js"></script>
+	<script type="text/javascript" src="Planets.js"></script>
+	<script type="text/javascript" src="Menu.js"></script>
+	
+    <title>MPN Generator</title>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="base.css"/>
+    <link rel="stylesheet" type="text/css" href="custom.css"/>
+	
+	
+	
 </head>
 <body>
-    <header id="section_1" class="section section_1">
-        <h1>KSP Mission Overview Generator</h1>
-        <div style="clear:both;"></div>
-    </header>
-    <section id="section_2" class="section section_2">
-        <?php echo $missions; ?>
-        <div style="clear:both;"></div>
-    </section>
-    <footer id="section_3" class="section section_3">
-        <small>Page rendered in <?php echo round((microtime(true) - $time_start),2); ?> seconds.</small>
-        <div style="clear:both;"></div>
-    </footer>
-    <div id="copyright">&copy; <?php echo date('Y'); ?></div>
-    <div id="vanity">
-        <a title="Validate HTML" href= "http://validator.w3.org/check?uri=<?php echo rawurlencode( 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ); ?>">HTML5</a>, 
-        <a title="Validate CSS" href= "http://jigsaw.w3.org/css-validator/validator?uri=<?php echo rawurlencode( 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] ); ?>">CSS3</a>, & JavaScript
-        <div style="clear:both;"></div>
-    </div>
-    <div style="clear:both;"></div>
+	<script type="text/javascript">
+		//alert("Hello! I am an alert box!");
+	</script>
+	<!--<img id = "goo" src="https://www.google.com/images/srpr/logo11w.png" />--->
+	
+		<div style =  "text-align:center">
+			<canvas id="myCanvas" 
+			width="1280" height="720" 
+			style= "margin-left: -640px; border:1px solid #d3d3d3; 
+			text-align: center"
+			></canvas>
+		</div>
 </body>
 </html>
