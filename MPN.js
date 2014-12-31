@@ -14,20 +14,6 @@ $(document).ready(function() {
 	$(document).mousemove(function(event) {
 	
 		if (click){drag();}
-	
-		pageMouseX = event.pageX;
-		pageMouseY = event.pageY;
-	
-		var rect = document.getElementById("myCanvas").getBoundingClientRect();
-		
-		canvasX = rect.left;
-		canvasY = rect.top;
-		
-		midScreenPos[0] = screenPos[0] + rect.width / 2;
-		midScreenPos[1] = screenPos[1] + rect.height / 2;
-		
-		fillRect(0, 0, rect.width, rect.height);
-		//drawLine(rect.width / 2, rect.height / 2, locateMouseX(), locateMouseY());
 		
 		drawAll();
 	});
@@ -53,18 +39,35 @@ $(document).ready(function() {
 });
 
 function drawAll(){
-	drawToolbar();
+	pageMouseX = event.pageX;
+	pageMouseY = event.pageY;
+	
+	var rect = document.getElementById("myCanvas").getBoundingClientRect();
+		
+	canvasX = rect.left;
+	canvasY = rect.top;
+		
+	midScreenPos[0] = screenPos[0] + rect.width / 2;
+	midScreenPos[1] = screenPos[1] + rect.height / 2;
+		
+	drawColor = '#ffffff';
+	fillRect(0, 0, rect.width, rect.height);
 	drawPlanets();
+	drawKey();
+	drawToolbar();
 }
 
 function drag(){
 	dragPlanets();
+	dragKey();
 }
 
 function mousePress(){
 	selectPlanets();
+	selectKey();
 }
 
 function mouseRelease(){
 	deselectPlanets();
+	deselectKey();
 }

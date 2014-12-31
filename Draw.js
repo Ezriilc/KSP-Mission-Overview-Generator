@@ -1,4 +1,4 @@
-var lineWidth = 10;
+var lineWidth = 3;
 
 var screenPos = [0, 0];
 var midScreenPos = [0, 0];
@@ -55,7 +55,7 @@ function drawCircle(x1, y1, radius){
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
 	
-	context.lineWidth = 3;
+	context.lineWidth = lineWidth;
 	
 	context.beginPath();
     context.arc(x1, y1, radius, 0, 2 * Math.PI, false);
@@ -80,14 +80,16 @@ function fillRect(x1, y1, x2, y2){
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
 	
-	context.fillStyle = '#ffffff';
+	context.fillStyle = drawColor;
 	context.fillRect(x1, y1, x2, y2);
 }
 
-function roundedRect(x,y,width,height,radius){
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
-
+function roundedRect(x,y,width,height,radius, fill){
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+	
+	ctx.fillStyle = drawColor;
+	ctx.strokeStyle = drawColor;
 
   ctx.beginPath();
   ctx.moveTo(x,y+radius);
@@ -99,6 +101,16 @@ var ctx = canvas.getContext("2d");
   ctx.quadraticCurveTo(x+width,y,x+width-radius,y);
   ctx.lineTo(x+radius,y);
   ctx.quadraticCurveTo(x,y,x,y+radius);
-  //ctx.stroke();
-  ctx.fill();
+
+  if (fill){
+	ctx.fill();
+  }
+  else{
+  	ctx.lineWidth = lineWidth;
+	ctx.stroke();
+  }
+}
+
+function roundedRectLocal(x,y,width,height,radius, fill){
+	roundedRect(x + midScreenPos[0], y + midScreenPos[1], width,height,radius, fill);
 }

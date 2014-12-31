@@ -22,7 +22,7 @@ function Button(x, y, width, height, label) {
 	
 	this.checkSelected = function() {
         this.selected = (locateMouseX() > this.x && locateMouseX() < this.x + this.width
-					&& locateMouseY() > this.y && locateMouseY() < this.y + this.height);
+						&& locateMouseY() > this.y && locateMouseY() < this.y + this.height);
     };
 }
 
@@ -33,13 +33,14 @@ function drawButton(button){
 	context.font = stringStyle;
 	
 	if (button.selected){
-		context.fillStyle = '#000000';
-		//context.fillRect(button.x, button.y, button.width, button.height);
-		roundedRect(button.x, button.y, button.width, button.height, 8);
+		drawColor = '#000000';
+		roundedRect(button.x, button.y, button.width, button.height, 8, true);
 		context.fillStyle = '#ffffff';
 		context.fillText(" " + button.label, button.x, button.y + stringMove);
 	}
 	else{
+		drawColor = '#ffffff';
+		roundedRect(button.x, button.y, button.width, button.height, 8, true);
 		context.fillStyle = '#000000';
 		context.fillText(" " + button.label, button.x, button.y + stringMove);
 	}
