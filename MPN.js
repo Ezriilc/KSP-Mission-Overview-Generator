@@ -4,6 +4,10 @@ var laneWidth = 64;
 
 $(document).ready(function() {
 
+	var c = new Craft("Untitled Space Craft", '#000000', 3);
+	c.selected = true;
+	new Planet("Ke", planetFillColors[3], planetFringeColors[3]);
+
 	drawAll();
 
 	var rect = document.getElementById("myCanvas").getBoundingClientRect();
@@ -33,6 +37,7 @@ $(document).ready(function() {
 	
 	$(document).keypress(function(event) {
 		new Planet("Hi", planetFillColors[3], planetFringeColors[3]);
+		new Craft("Untitled Space Craft", '#00aa00', 3);
 		drawAll();
 		//String.fromCharCode(event.which);
 	});
@@ -53,6 +58,7 @@ function drawAll(){
 	drawColor = '#ffffff';
 	fillRect(0, 0, rect.width, rect.height);
 	drawPlanets();
+	drawCrafts();
 	drawKey();
 	drawToolbar();
 }
@@ -63,7 +69,9 @@ function drag(){
 }
 
 function mousePress(){
+	deselectCrafts(); //temporary
 	selectPlanets();
+	selectCrafts();
 	selectKey();
 }
 

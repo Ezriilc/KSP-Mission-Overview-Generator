@@ -33,9 +33,7 @@ function drawPlanets(){
 function selectPlanets(){
 	planets.forEach(function(entry) {
 		if(distance(entry.position[0] + midScreenPos[0], entry.position[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < entry.radius){
-			planets.forEach(function(d) {
-				d.selected = false;
-			});
+			deselectPlanets();
 			entry.selected = true;
 		}
 	});

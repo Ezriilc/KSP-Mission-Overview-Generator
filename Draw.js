@@ -30,7 +30,7 @@ function drawLine(x1, y1, x2, y2){
 }
 
 function drawLineLocal(x1, y1, x2, y2){
-	drawLine(x1 - midScreenPos[0], y1 - midScreenPos[1], x2 - midScreenPos[0], y2 - midScreenPos[1]);
+	drawLine(x1 + midScreenPos[0], y1 + midScreenPos[1], x2 + midScreenPos[0], y2 + midScreenPos[1]);
 }
 
 function fillCircle(x1, y1, radius){

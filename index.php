@@ -19,6 +19,7 @@
 	<script type="text/javascript" src="Planets.js"></script>
 	<script type="text/javascript" src="Menu.js"></script>
 	<script type="text/javascript" src="Key.js"></script>
+	<script type="text/javascript" src="Crafts.js"></script>
 	
     <title>MPN Generator</title>
     <link rel="shortcut icon" href="favicon.ico"/>

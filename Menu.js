@@ -44,8 +44,6 @@ function drawButton(button){
 		context.fillStyle = '#000000';
 		context.fillText(" " + button.label, button.x, button.y + stringMove);
 	}
-
-    
 }
 
 function drawToolbar(){
