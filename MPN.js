@@ -1,11 +1,14 @@
 var click = false;
 var mode = false; //linear = false, flowchart = true
 var laneWidth = 64;
+var screenSelected = false;
 
 $(document).ready(function() {
 
+	initiateToolbar();
+
 	var c = new Craft("Untitled Space Craft", '#000000', 3);
-	c.selected = true;
+	//c.selected = true;
 	new Planet("Ke", planetFillColors[3], planetFringeColors[3]);
 
 	drawAll();
@@ -36,7 +39,7 @@ $(document).ready(function() {
 	});
 	
 	$(document).keypress(function(event) {
-		new Planet("Hi", planetFillColors[3], planetFringeColors[3]);
+		new Planet("Ke", planetFillColors[3], planetFringeColors[3]);
 		new Craft("Untitled Space Craft", '#00aa00', 3);
 		drawAll();
 		//String.fromCharCode(event.which);
@@ -69,10 +72,19 @@ function drag(){
 }
 
 function mousePress(){
-	deselectCrafts(); //temporary
+	screenSelected = true;
+	//deselectCrafts(); //temporary
 	selectPlanets();
 	selectCrafts();
 	selectKey();
+	clickButtons();
+}
+
+function deselectAll(){
+	screenSelected = false;
+	deselectCrafts();
+	deselectPlanets();
+	deselectKey();
 }
 
 function mouseRelease(){

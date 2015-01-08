@@ -33,7 +33,7 @@ function drawPlanets(){
 function selectPlanets(){
 	planets.forEach(function(entry) {
 		if(distance(entry.position[0] + midScreenPos[0], entry.position[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < entry.radius){
-			deselectPlanets();
+			deselectPlanets(); //deselectAll results in a craft deselection glitch
 			entry.selected = true;
 		}
 	});
