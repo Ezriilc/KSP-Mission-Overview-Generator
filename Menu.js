@@ -7,7 +7,7 @@ var toolbar =[
 	new Button(50, 0, 50, 16, "Edit"),
 	new Button(100, 0, 50, 16, "View"),
 	new Button(150, 0, 50, 16, "Mode"),
-	new Button(200, 0, 60, 16, "Planets")
+	//new Button(200, 0, 60, 16, "Planets")
 	];
 
 function initiateToolbar(){
@@ -22,6 +22,7 @@ function initiateToolbar(){
 				var v = new Button(260, depth, 256, 16, cra.name);
 				v.target = cra;
 				v.parent = a;
+				v.color = cra.color;
 				v.onClicked = function() {
 					if (!this.target.selected){
 						deselectAll();
@@ -47,6 +48,38 @@ function initiateToolbar(){
 		}
     };
 	toolbar.push(c);
+
+	c = new Button(200, 0, 60, 16, "Planets");
+	c.onClicked = function() {
+		if (!this.showSubbar){
+			this.showSubbar = true;
+		}
+		else{
+			this.hideSubbar();
+			this.subbar.forEach(function(cra) {
+				this.subbar.pop(cra);
+			});
+		}
+    };
+	
+	var depth = 16;
+	planetFullNames.forEach(function(cra) {
+		var v = new Button(200, depth, 128, 16, cra);
+		v.parent = c;
+		v.pid = depth / 16 - 1;
+		v.color = planetFringeColors[v.pid];
+		v.x += planetHierarchyIndexes[v.pid] * 12;
+		v.onClicked = function() {
+			new Planet(this.pid);
+			this.parent.hideSubbar();
+		};
+		c.subbar.push(v);
+				
+		depth += 16;
+	});
+	
+	toolbar.push(c);
+
 }
 	
 function Button(x, y, width, height, label) {
@@ -56,6 +89,8 @@ function Button(x, y, width, height, label) {
 	this.y = y;
 	this.width = width;
 	this.height = height;
+	
+	this.color = '#000000';
 
 	this.selected = false;
 	
@@ -107,7 +142,7 @@ function drawButton(button){
 	context.font = stringStyle;
 	
 	if (button.selected){
-		drawColor = '#000000';
+		drawColor = button.color;
 		roundedRect(button.x, button.y, button.width, button.height, 8, true);
 		context.fillStyle = '#ffffff';
 		context.fillText(" " + button.label, button.x, button.y + stringMove);
@@ -115,7 +150,7 @@ function drawButton(button){
 	else{
 		drawColor = '#ffffff';
 		roundedRect(button.x, button.y, button.width, button.height, 8, true);
-		context.fillStyle = '#000000';
+		context.fillStyle = button.color;
 		context.fillText(" " + button.label, button.x, button.y + stringMove);
 	}
 	

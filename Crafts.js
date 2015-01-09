@@ -1,4 +1,5 @@
 var crafts = new Array();
+var craftShown = false; //whether the craft editing menu is shown
 
 function Craft(name, color, lineWidth) {
     this.name = name;
@@ -16,18 +17,48 @@ function Craft(name, color, lineWidth) {
 }
 
 function drawCrafts(){
-	crafts.forEach(function(entry) {
+
+	var show = false;
 	
-		if (entry.selected){entry.radius = 8;}
+	crafts.forEach(function(entry) {
+		if (entry.selected){
+			entry.radius = 8;
+			show = entry;
+		}
 		else{entry.radius = 4;}
 
-		drawColor = '#ffffff';
-		fillCircleLocal(entry.position[0], entry.position[1], entry.radius);
+		//drawColor = '#ffffff';
+		//fillCircleLocal(entry.position[0], entry.position[1], entry.radius);
 		drawColor = entry.color;
+		lineWidth = entry.lineWidth;
 		drawCircleLocal(entry.position[0], entry.position[1], entry.radius);
 		
 		drawPath(entry);
 	});
+	
+	if (show){
+		if (!craftShown){
+		$("#label2").remove();
+		$("#craft").show();
+		document.getElementById('color2').color.fromString(show.color);
+		document.getElementById('name2').value = show.name;
+		document.getElementById('width2').value = show.lineWidth;
+		
+		$label2 = $("<h1 id = 'label2'>" + show.name + "</h1>");
+		$("#craftColor").after($label2);
+		$("#craftColor").hide();
+		craftShown = true;
+		}
+		
+		if (document.getElementById('name2').value != show.name){show.name = document.getElementById('name2').value;}
+		if (Number(document.getElementById('width2').value) != show.lineWidth && Number(document.getElementById('width2').value) != NaN && Number(document.getElementById('width2').value) > 0){show.lineWidth = Number(document.getElementById('width2').value);}
+	}
+	else{
+		$("#craft").hide();
+		$("#label2").remove();
+		$("#craftColor").show();
+		craftShown = false;
+	}
 }
 
 function drawPath(craft){}

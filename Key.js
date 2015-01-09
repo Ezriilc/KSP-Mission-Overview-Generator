@@ -1,6 +1,6 @@
-var keyX = -600;
-var keyY = -64;
-var keyWidth = 512;
+var keyX = -128;
+var keyY = 64;
+var keyWidth = 256;
 var keyHeight = 128;
 var keySelected = false;
 var keyBorderWidth = 1.5;
@@ -53,24 +53,24 @@ function drawKey(){
 			itY ++;
 		}
 		
-		var wCol = entry.fillColor;
-		drawColor = entry.fillColor;
+		var wCol = entry.fringeColor;
+		drawColor = entry.fringeColor;
 		/*if(containsMouse(keyX + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX, keyFontSize)){
 			roundedRectLocal(keyX + 2 + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 6, keyFontSize + 2, 4, true);
 			wCol = '#ffffff';
 			drawColor = '#ffffff';
 		}*/
 		
-		if (entry.selected){
+		/*if (entry.selected){
 			roundedRectLocal(keyX + 8 + keyLineLength + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 12 - keyLineLength, keyFontSize + 2, 4, true);
 			wCol = '#ffffff';
-		}
+		}*/
 
 		//lineWidth = entry.lineWidth;
 		//drawLineLocal(keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyX + 4 + keyLineLength + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2);
 		context.fillStyle = wCol;
 		context.font = keyFont;
-		context.fillText(entry.name, keyX + midScreenPos[0] + 8 + keyLineLength + spaceX * itY, keyY + midScreenPos[1] + itX * keyFontSize + 4);
+		context.fillText(entry.fullName, keyX + midScreenPos[0] + 8 + keyLineLength + spaceX * itY, keyY + midScreenPos[1] + itX * keyFontSize + 4);
 		
 		drawColor = entry.fillColor;
 		fillCircleLocal(keyLineLength / 2 + keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyFontSize / 2 - 4);
@@ -93,10 +93,10 @@ function drawKey(){
 			wCol = '#ffffff';
 			drawColor = '#ffffff';
 		}*/
-		if (entry.selected){
+		/*if (entry.selected){
 			roundedRectLocal(keyX + 8 + keyLineLength + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 12 - keyLineLength, keyFontSize + 2, 4, true);
 			wCol = '#ffffff';
-		}
+		}*/
 
 		lineWidth = entry.lineWidth;
 		drawLineLocal(keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyX + 4 + keyLineLength + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2);
