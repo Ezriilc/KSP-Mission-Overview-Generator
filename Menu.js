@@ -3,15 +3,22 @@ var stringStyle = '12pt Calibri';
 var stringMove = 14;
 
 var toolbar =[
-	new Button(0, 0, 50, 16, "File"),
-	new Button(50, 0, 50, 16, "Edit"),
-	new Button(100, 0, 50, 16, "View"),
-	new Button(150, 0, 50, 16, "Mode"),
+	//new Button(0, 0, 50, 16, "File"),
+	//new Button(50, 0, 50, 16, "Edit"),
+	//new Button(100, 0, 50, 16, "View"),
+	//new Button(150, 0, 50, 16, "Mode"),
 	//new Button(200, 0, 60, 16, "Planets")
 	];
 
 function initiateToolbar(){
-	var c = new Button(260, 0, 60, 16, "Crafts");
+	initiatePlanetButton();
+	initiateCraftButton();
+
+}
+
+function initiateCraftButton(){
+
+	var c = new Button(0, 0, 64, 16, "Crafts");
 	c.onClicked = function() {
 		if (!this.showSubbar){
 		
@@ -19,18 +26,78 @@ function initiateToolbar(){
 			var depth = 16;
 			crafts.forEach(function(cra) {
 			
-				var v = new Button(260, depth, 256, 16, cra.name);
+				var v = new Button(0, depth, 256, 16, cra.model.name);
 				v.target = cra;
 				v.parent = a;
-				v.color = cra.color;
+				v.color = cra.model.color;
 				v.onClicked = function() {
-					if (!this.target.selected){
-						deselectAll();
-						this.target.selected = true;
-					}
-					else{
-						deselectAll();
-					}
+					currentCraft = this.target;
+					craftShown = false;
+					this.parent.hideSubbar();
+				};
+				a.subbar.push(v);
+				
+				depth += 16;
+			});
+			
+			this.showSubbar = true;
+		}
+		else{
+			this.hideSubbar();
+			this.subbar.forEach(function(cra) {
+				this.subbar.pop(cra);
+			});
+		}
+    };
+	toolbar.push(c);
+	
+	c = new Button(128, 0, 128, 16, "Add Crafts");
+	c.onClicked = function() {
+		if (!this.showSubbar){
+			this.showSubbar = true;
+		}
+		else{
+			this.hideSubbar();
+			this.subbar.forEach(function(cra) {
+				this.subbar.pop(cra);
+			});
+		}
+    };
+	
+	depth = 16;
+	//craftModels.forEach(function(cra) {
+		//var v = new Button(128, depth, 128, 16, cra.name);
+		//v.parent = c;
+		//v.pid = depth / 16 - 1;
+		//v.color = planetFringeColors[v.pid];
+		//v.x += planetHierarchyIndexes[v.pid]* 12;
+		//v.onClicked = function() {
+		//	new Planet(this.pid);
+		//	this.parent.hideSubbar();
+		//};
+		//c.subbar.push(v);
+		//depth += 16;
+	//});
+	
+	toolbar.push(c);
+}
+
+function initiatePlanetButton(){
+	var c = new Button(64, 0, 64, 16, "Planets");
+	c.onClicked = function() {
+		if (!this.showSubbar){
+		
+			var a = this;
+			var depth = 16;
+			planets.forEach(function(cra) {
+			
+				var v = new Button(64, depth, 128, 16, cra.fullName + " (" + cra.name + ")");
+				v.target = cra;
+				v.parent = a;
+				v.color = cra.fringeColor;
+				v.onClicked = function() {
+					currentPlanet = this.target;
+					planetShown = false;
 					this.parent.hideSubbar();
 				};
 				a.subbar.push(v);
@@ -49,7 +116,7 @@ function initiateToolbar(){
     };
 	toolbar.push(c);
 
-	c = new Button(200, 0, 60, 16, "Planets");
+	c = new Button(256, 0, 128, 16, "Add Planets");
 	c.onClicked = function() {
 		if (!this.showSubbar){
 			this.showSubbar = true;
@@ -64,11 +131,11 @@ function initiateToolbar(){
 	
 	var depth = 16;
 	planetFullNames.forEach(function(cra) {
-		var v = new Button(200, depth, 128, 16, cra);
+		var v = new Button(256, depth, 128, 16, cra);
 		v.parent = c;
 		v.pid = depth / 16 - 1;
 		v.color = planetFringeColors[v.pid];
-		v.x += planetHierarchyIndexes[v.pid] * 12;
+		v.x += planetHierarchyIndexes[v.pid]* 12;
 		v.onClicked = function() {
 			new Planet(this.pid);
 			this.parent.hideSubbar();
@@ -79,7 +146,6 @@ function initiateToolbar(){
 	});
 	
 	toolbar.push(c);
-
 }
 	
 function Button(x, y, width, height, label) {
@@ -123,7 +189,7 @@ function Button(x, y, width, height, label) {
     };
 	
 	this.onClicked = function() {
-        alert("onClicked function unbound for button " + this.label + "."); 
+        //alert("onClicked function unbound for button " + this.label + "."); 
     };
 	
 	this.onSelected = function() {
@@ -172,6 +238,4 @@ function clickButtons(){
 		entry.checkClicked();
 	});
 }
-
-/* CRAFTS */
 

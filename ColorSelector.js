@@ -1,29 +1,19 @@
-var lastSelectedPlanet;
-
-function setPlanet(planet){
-	lastSelectedPlanet = planet;
-}
-
 function updateColor(color, id) {
 	if (id == 0){
-		planetFringeColors[lastSelectedPlanet.id]= color.valueElement.value;
-		
-		
+		planetFringeColors[currentPlanet.id]= color.valueElement.value;
 		planets.forEach(function(entry) {
 			entry.fringeColor = planetFringeColors[entry.id];
 		});
+		toolbar[1].subbar[currentPlanet.id].color = planetFringeColors[currentPlanet.id];
 	}
 	if (id == 1){
-		planetFillColors[lastSelectedPlanet.id] = color.valueElement.value;
+		planetFillColors[currentPlanet.id] = color.valueElement.value;
 		planets.forEach(function(entry) {
 			entry.fillColor = planetFillColors[entry.id];
 		});
 	}
 	if (id == 2){
-		crafts.forEach(function(entry) {
-			if (entry.selected){
-				entry.color = color.valueElement.value;
-			}
-		});
+		currentCraft.model.color = color.valueElement.value;
+		toolbar[3].subbar[craftModels.indexOf(currentCraft.model)].color = currentCraft.model.color;
 	}
 }

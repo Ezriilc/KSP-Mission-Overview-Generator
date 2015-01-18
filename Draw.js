@@ -20,13 +20,13 @@ function drawLine(x1, y1, x2, y2){
 	
 	context.lineWidth /= 2;
 	
-	context.beginPath();
+	/*context.beginPath();
     context.arc(x1, y1, context.lineWidth / 2, 0, 2 * Math.PI, false);
 	context.stroke();
 	
 	context.beginPath();
     context.arc(x2, y2, context.lineWidth / 2, 0, 2 * Math.PI, false);
-	context.stroke();
+	context.stroke();*/
 }
 
 function drawLineLocal(x1, y1, x2, y2){

@@ -15,46 +15,86 @@ function drawKey(){
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
 	
-	drawColor = '#ffffff'
-	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, true);
-	drawColor = '#000000'
-	lineWidth = keyBorderWidth * 2;
-	if (keyWidth < 8 || keyHeight < 8){
-		drawColor = '#ff0000'
-	}
-	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, false);
+	var minStringWidth = 0;
+	context.font = keyFont;
 
 	var itX = 1;
 	var itY = 0;
+	var numP = 0;
 	
-	planets.forEach(function() {
-		if (itX * keyFontSize + 4 > keyHeight - 4){
-			itX = 1;
-			itY ++;
+	var shouldDraw = false;
+	
+	planetFullNames.forEach(function(entry) {
+	
+		shouldDraw = false;
+		
+		planets.forEach(function(ent) {
+			if (ent.id == numP){shouldDraw = true;}
+		});
+		
+		if (shouldDraw){
+		
+			minStringWidth = Math.max(minStringWidth, context.measureText(entry).width);
+			
+			if (itX * keyFontSize + 4 > keyHeight - 4){
+				itX = 1;
+				itY ++;
+			}
+			itX++;
 		}
-		itX++;
+		numP++;
 	});
 	
-	crafts.forEach(function() {
-		if (itX * keyFontSize + 4 > keyHeight - 4){
-			itX = 1;
-			itY ++;
+	craftModels.forEach(function(entry) {
+	
+		shouldDraw = false;
+	
+		crafts.forEach(function(ent) {
+			if (ent.model == entry){shouldDraw = true;}
+		});
+		
+		if (shouldDraw){
+		
+			minStringWidth = Math.max(minStringWidth, context.measureText(entry.name).width);
+		
+			if (itX * keyFontSize + 4 > keyHeight - 4){
+				itX = 1;
+				itY ++;
+			}
+			itX++;
 		}
-		itX++;
 	});
 	
 	var spaceX = keyWidth / (itY + 1);
 	itX = 1;
 	itY = 0;
+	numP = 0;
 	
-	planets.forEach(function(entry) {
-		if (itX * keyFontSize + 4 > keyHeight - 4){
-			itX = 1;
-			itY ++;
-		}
+	drawColor = '#ffffff'
+	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, true);
+	drawColor = '#000000'
+	if (spaceX < minStringWidth + keyLineLength + 8|| keyHeight < keyFontSize + 8){
+		drawColor = '#ff0000'
+	}
+	lineWidth = keyBorderWidth * 2;
+	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, false);
+	
+	planetFullNames.forEach(function(entry) {
+	
+		shouldDraw = false;
 		
-		var wCol = entry.fringeColor;
-		drawColor = entry.fringeColor;
+		planets.forEach(function(ent) {
+			if (ent.id == numP){shouldDraw = true;}
+		});
+
+		if (shouldDraw){
+			if (itX * keyFontSize + 4 > keyHeight - 4){
+				itX = 1;
+				itY ++;
+			}
+		
+			var wCol = planetFringeColors[numP];
+			drawColor = planetFringeColors[numP];
 		/*if(containsMouse(keyX + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX, keyFontSize)){
 			roundedRectLocal(keyX + 2 + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 6, keyFontSize + 2, 4, true);
 			wCol = '#ffffff';
@@ -68,26 +108,36 @@ function drawKey(){
 
 		//lineWidth = entry.lineWidth;
 		//drawLineLocal(keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyX + 4 + keyLineLength + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2);
-		context.fillStyle = wCol;
-		context.font = keyFont;
-		context.fillText(entry.fullName, keyX + midScreenPos[0] + 8 + keyLineLength + spaceX * itY, keyY + midScreenPos[1] + itX * keyFontSize + 4);
+			context.fillStyle = wCol;
+			context.font = keyFont;
+			context.fillText(entry, keyX + midScreenPos[0] + 8 + keyLineLength + spaceX * itY, keyY + midScreenPos[1] + itX * keyFontSize + 4);
 		
-		drawColor = entry.fillColor;
-		fillCircleLocal(keyLineLength / 2 + keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyFontSize / 2 - 4);
-		drawColor = entry.fringeColor;
-		drawCircleLocal(keyLineLength / 2 + keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyFontSize / 2 - 4);
-		
-		itX++;
-	});
+			drawColor = planetFillColors[numP];
+			fillCircleLocal(keyLineLength / 2 + keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyFontSize / 2 - 4);
+			drawColor = planetFringeColors[numP];
+			drawCircleLocal(keyLineLength / 2 + keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyFontSize / 2 - 4);
 
-	crafts.forEach(function(entry) {
-		if (itX * keyFontSize + 4 > keyHeight - 4){
-			itX = 1;
-			itY ++;
+			itX++;
 		}
+		numP++;
 		
-		var wCol = entry.color;
-		drawColor = entry.color;
+	});
+	craftModels.forEach(function(entry) {
+	
+		shouldDraw = false;
+	
+		crafts.forEach(function(ent) {
+			if (ent.model == entry){shouldDraw = true;}
+		});
+		
+		if (shouldDraw){
+			if (itX * keyFontSize + 4 > keyHeight - 4){
+				itX = 1;
+				itY ++;
+			}
+		
+			var wCol = entry.color;
+			drawColor = entry.color;
 		/*if(containsMouse(keyX + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX, keyFontSize)){
 			roundedRectLocal(keyX + 2 + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 6, keyFontSize + 2, 4, true);
 			wCol = '#ffffff';
@@ -98,13 +148,13 @@ function drawKey(){
 			wCol = '#ffffff';
 		}*/
 
-		lineWidth = entry.lineWidth;
-		drawLineLocal(keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyX + 4 + keyLineLength + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2);
-		context.fillStyle = wCol;
-		context.font = keyFont;
-		context.fillText(entry.name, keyX + midScreenPos[0] + 8 + keyLineLength + spaceX * itY, keyY + midScreenPos[1] + itX * keyFontSize + 4);
-		itX++;
-
+			lineWidth = entry.lineWidth;
+			drawLineLocal(keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyX + 4 + keyLineLength + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2);
+			context.fillStyle = wCol;
+			context.font = keyFont;
+			context.fillText(entry.name, keyX + midScreenPos[0] + 8 + keyLineLength + spaceX * itY, keyY + midScreenPos[1] + itX * keyFontSize + 4);
+			itX++;
+		}
 	});
 }
 

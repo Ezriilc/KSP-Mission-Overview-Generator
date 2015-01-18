@@ -1,23 +1,29 @@
 var click = false;
-var mode = false; //linear = false, flowchart = true
+var mode = true; //linear = false, flowchart = true
 var laneWidth = 64;
 var screenSelected = false;
 
+var currentPlanet = false;
+var currentCraft = false;
+
 $(document).ready(function() {
+
+	initiatePlanets();
+	initiateCrafts();
 
 	initiateToolbar();
 
-	var c = new Craft("Untitled Space Craft", '#000000', 3);
-	//c.selected = true;
 	var p = new Planet(4);
-	setPlanet(p);
+	var m = new CraftModel("Untitled Space Craft", '#000000', 3);
+	var c = new Craft(m);
 
 	drawAll();
 
 	var rect = document.getElementById("myCanvas").getBoundingClientRect();
 
-	document.getElementById("myCanvas").style.marginLeft = (-rect.width / 2) + "px";
-	document.getElementById("myCanvas").style.position = "absolute";
+	//document.getElementById("myCanvas").style.marginLeft = (-rect.width / 2) + "px";
+	//document.getElementById("myCanvas").style.position = "absolute";
+	//document.getElementById("tweak").style.position = "absolute";
 
 	$(document).mousemove(function(event) {
 	
@@ -73,8 +79,8 @@ function drag(){
 }
 
 function mousePress(){
+	deselectAll();
 	screenSelected = true;
-	//deselectCrafts(); //temporary
 	selectPlanets();
 	selectCrafts();
 	selectKey();
@@ -91,4 +97,14 @@ function deselectAll(){
 function mouseRelease(){
 	deselectPlanets();
 	deselectKey();
+}
+
+function changeHeight(textbox){
+	document.getElementById("myCanvas").height = textbox.value;
+	drawAll();
+}
+
+function changeWidth(textbox){
+	document.getElementById("myCanvas").width = textbox.value;
+	drawAll();
 }

@@ -1,64 +1,137 @@
+var craftModels = new Array();
 var crafts = new Array();
-var craftShown = false; //whether the craft editing menu is shown
+var craftShown = false; //whether the correct craft editing menu is shown
+var craftMoreShown = false;
 
-function Craft(name, color, lineWidth) {
+function CraftModel(name, color, lineWidth) {
     this.name = name;
 	
 	this.color = color;
-	this.lineWidth = lineWidth;		
+	this.lineWidth = lineWidth;	
+	
+	this.radius = 4;
+	craftModels.push(this);
+	this.children = new Array();
+	
+	$("#craftModelSelector").append("<option value='" + craftModels.indexOf(this) + "'>" + name + "</option>");
+	
+	var v = new Button(128, toolbar[3].subbar.length * 16 + 16, 256, 16, name);
+	v.parent = toolbar[3];
+	v.model = this;
+	v.color = color;
+	v.onClicked = function() {
+		new Craft(this.model);
+		this.parent.hideSubbar();
+	};
+	toolbar[3].subbar.push(v);
+}
+
+function Craft(model) {
+    this.model = model;
+
+	this.location = 1; //in orbit: 0, on surface: 1, at endpoint: 2, arriving at planet: 3; arriving at vessel: 4;
+	this.planet = false;
 	
     this.position = [0, 0];
-	this.radius = 4;
 	crafts.push(this);
 	
 	this.where = 0; //0: on planet
 	
 	this.selected = false;
+	model.children.push(this);
+	this.childId = model.children.indexOf(this);
+}
+
+function craftMoreButton(button){
+	if (craftMoreShown){
+		button.value = "Show Model Options";
+		$("#craftMore").hide();
+	}
+	else{
+		button.value = "Hide Model Options";
+		$("#craftMore").show();
+	}
+	craftMoreShown = !craftMoreShown;
+}
+
+function initiateCrafts(){
+	$("#craftMore").hide();
+}
+
+function deleteCraftButton(button){
+	crafts.splice(crafts.indexOf(currentCraft), 1);
+	currentCraft = false;
 }
 
 function drawCrafts(){
-
-	var show = false;
 	
 	crafts.forEach(function(entry) {
-		if (entry.selected){
+	
+		//entry.position = entry.planet.position;
+	
+		if (entry == currentCraft){
 			entry.radius = 8;
-			show = entry;
 		}
 		else{entry.radius = 4;}
 
 		//drawColor = '#ffffff';
 		//fillCircleLocal(entry.position[0], entry.position[1], entry.radius);
-		drawColor = entry.color;
-		lineWidth = entry.lineWidth;
+		drawColor = entry.model.color;
+		lineWidth = entry.model.lineWidth;
 		drawCircleLocal(entry.position[0], entry.position[1], entry.radius);
 		
 		drawPath(entry);
 	});
 	
-	if (show){
+	if (currentCraft){
 		if (!craftShown){
-		$("#label2").remove();
+		$("#label2").show();
 		$("#craft").show();
-		document.getElementById('color2').color.fromString(show.color);
-		document.getElementById('name2').value = show.name;
-		document.getElementById('width2').value = show.lineWidth;
+		document.getElementById('color2').color.fromString(currentCraft.model.color);
+		document.getElementById('name2').value = currentCraft.model.name;
+		document.getElementById('width2').value = currentCraft.model.lineWidth;
+		$("#craftModelSelector").val(craftModels.indexOf(currentCraft.model));
 		
-		$label2 = $("<h1 id = 'label2'>" + show.name + "</h1>");
-		$("#craftColor").after($label2);
+		document.getElementById("label2").innerHTML = currentCraft.model.name;
 		$("#craftColor").hide();
 		craftShown = true;
 		}
-		
-		if (document.getElementById('name2').value != show.name){show.name = document.getElementById('name2').value;}
-		if (Number(document.getElementById('width2').value) != show.lineWidth && Number(document.getElementById('width2').value) != NaN && Number(document.getElementById('width2').value) > 0){show.lineWidth = Number(document.getElementById('width2').value);}
 	}
 	else{
 		$("#craft").hide();
-		$("#label2").remove();
+		$("#label2").hide();
 		$("#craftColor").show();
 		craftShown = false;
 	}
+}
+
+function name2(textbox){
+	currentCraft.model.name = document.getElementById('name2').value;
+	toolbar[3].subbar[craftModels.indexOf(currentCraft.model)].label = currentCraft.model.name;
+	document.getElementById("label2").innerHTML = currentCraft.model.name;
+			
+	for (var x = craftModels.length; x > -1; x--){
+		document.getElementById("craftModelSelector").remove(x);
+	}
+	craftModels.forEach(function(entry) {
+		$("#craftModelSelector").append("<option value='" + craftModels.indexOf(entry) + "'>" + entry.name + "</option>");
+	});
+	$("#craftModelSelector").val(craftModels.indexOf(currentCraft.model));
+}
+function width2(textbox){
+	if (Number(document.getElementById('width2').value) != NaN 
+	&& Number(document.getElementById('width2').value) > 0){
+		currentCraft.model.lineWidth = Number(document.getElementById('width2').value);
+	}
+}
+
+function craftModelSelector(selector){
+	currentCraft.model = craftModels[selector.value];
+	craftShown = false;
+}
+
+function createCraftModel(button){
+	new CraftModel("Untitled Space Craft", '#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase(), 3);
 }
 
 function drawPath(craft){}
@@ -69,6 +142,8 @@ function selectCrafts(){
 			if (!entry.selected){
 				deselectAll();
 				entry.selected = true;
+				currentCraft = entry;
+				craftShown = false;
 			}
 			else{
 				deselectAll();
