@@ -16,8 +16,64 @@ function initiateToolbar(){
 
 }
 
-function initiateCraftButton(){
+function setWindow(id){
+	switch (id){
+		case -1:
+			$('#craftEdit').hide();
+			$('#planetEdit').hide();
+			$('#view').hide();
+			$('#trajectoryEdit').hide();
+			$('#instructions').hide();
+		break;
+		case 0:
+			if($('#craftEdit').is(':visible')){
+				$('#craftEdit').hide();
+			}
+			else{
+				$('#craftEdit').show();
+				$('#windowButtons').after($('#craftEdit'));
+			}
+			break;
+		case 1:
+			if($('#planetEdit').is(':visible')){
+				$('#planetEdit').hide();
+			}
+			else{
+				$('#planetEdit').show();
+				$('#windowButtons').after($('#planetEdit'));
+			}
+			break;
+		case 2:
+			if($('#view').is(':visible')){
+				$('#view').hide();
+			}
+			else{
+				$('#view').show();
+				$('#windowButtons').after($('#view'));
+			}
+			break;
+		case 3:
+			if($('#trajectoryEdit').is(':visible')){
+				$('#trajectoryEdit').hide();
+			}
+			else{
+				$('#trajectoryEdit').show();
+				$('#windowButtons').after($('#trajectoryEdit'));
+			}
+			break;
+		case 4:
+			if($('#instructions').is(':visible')){
+				$('#instructions').hide();
+			}
+			else{
+				$('#instructions').show();
+				//$('#windowButtons').after($('#instructions'));
+			}
+			break;
+	}
+}
 
+function initiateCraftButton(){
 	var c = new Button(0, 0, 64, 16, "Crafts");
 	c.onClicked = function() {
 		if (!this.showSubbar){
@@ -34,6 +90,16 @@ function initiateCraftButton(){
 					currentCraft = this.target;
 					craftShown = false;
 					this.parent.hideSubbar();
+					highlightPos[0] = false;
+					highlightPos[1] = false;
+				};
+				v.onSelected = function() {
+					highlightPos[0] = this.target.position[0];
+					highlightPos[1] = this.target.position[1];
+				};
+				v.onDeselected = function() {
+					highlightPos[0] = false;
+					highlightPos[1] = false;
 				};
 				a.subbar.push(v);
 				
@@ -99,6 +165,16 @@ function initiatePlanetButton(){
 					currentPlanet = this.target;
 					planetShown = false;
 					this.parent.hideSubbar();
+					highlightPos[0] = false;
+					highlightPos[1] = false;
+				};
+				v.onSelected = function() {
+					highlightPos[0] = this.target.position[0];
+					highlightPos[1] = this.target.position[1];
+				};
+				v.onDeselected = function() {
+					highlightPos[0] = false;
+					highlightPos[1] = false;
 				};
 				a.subbar.push(v);
 				
@@ -171,25 +247,29 @@ function Button(x, y, width, height, label) {
 	};
 	
 	this.checkSelected = function() {
+		var prevSelelected = this.selected;
         this.selected = (locateMouseX() > this.x && locateMouseX() < this.x + this.width
 						&& locateMouseY() > this.y && locateMouseY() < this.y + this.height);
-		if (this.selected){
+		if (this.selected && !prevSelelected){
 			this.onSelected();
 		}
-		else{
+		if (!this.selected && prevSelelected){
 			this.onDeselected();
 		}
     };
 	
 	this.checkClicked = function() {
-        if (this.selected){this.onClicked();}
+        if (this.selected){
+			this.onClicked();
+			deselectAll();
+		}
 		this.subbar.forEach(function(entry) {
 			entry.checkClicked();
 		});
     };
 	
 	this.onClicked = function() {
-        //alert("onClicked function unbound for button " + this.label + "."); 
+
     };
 	
 	this.onSelected = function() {
@@ -234,8 +314,10 @@ function drawToolbar(){
 }
 
 function clickButtons(){
+	var targButton;
 	toolbar.forEach(function(entry) {
 		entry.checkClicked();
+		
 	});
 }
 

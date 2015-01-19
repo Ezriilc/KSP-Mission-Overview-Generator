@@ -54,6 +54,11 @@ function craftMoreButton(button){
 	craftMoreShown = !craftMoreShown;
 }
 
+function craftRecenterButton(button){
+	currentCraft.position[0] = 0;
+	currentCraft.position[1] = 0;
+}
+
 function initiateCrafts(){
 	$("#craftMore").hide();
 }

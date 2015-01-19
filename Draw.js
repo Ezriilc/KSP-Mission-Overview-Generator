@@ -5,6 +5,21 @@ var midScreenPos = [0, 0];
 
 var drawColor = '#ff0000';
 
+var highlightPos = [false, false];
+
+function drawHighlightLocal(){
+	if (!(highlightPos[0] === false)){
+		lineWidth = 7;
+		drawColor = '#ff0000';
+		drawLine(highlightPos[0] + midScreenPos[0] - 12, highlightPos[1] + midScreenPos[1], highlightPos[0] + midScreenPos[0] + 12, highlightPos[1] + midScreenPos[1]);
+		drawLine(highlightPos[0] + midScreenPos[0], highlightPos[1] + midScreenPos[1] - 12, highlightPos[0] + midScreenPos[0], highlightPos[1] + midScreenPos[1] + 12);
+		lineWidth = 3;
+		drawColor = '#ffffff';
+		drawLine(highlightPos[0] + midScreenPos[0] - 10, highlightPos[1] + midScreenPos[1], highlightPos[0] + midScreenPos[0] + 10, highlightPos[1] + midScreenPos[1]);
+		drawLine(highlightPos[0] + midScreenPos[0], highlightPos[1] + midScreenPos[1] - 10, highlightPos[0] + midScreenPos[0], highlightPos[1] + midScreenPos[1] + 10);
+	}
+}
+
 function drawLine(x1, y1, x2, y2){
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
@@ -18,7 +33,7 @@ function drawLine(x1, y1, x2, y2){
 	context.strokeStyle = drawColor;
     context.stroke();
 	
-	context.lineWidth /= 2;
+	//context.lineWidth /= 2;
 	
 	/*context.beginPath();
     context.arc(x1, y1, context.lineWidth / 2, 0, 2 * Math.PI, false);

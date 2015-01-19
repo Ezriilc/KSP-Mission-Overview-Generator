@@ -8,6 +8,8 @@ var currentCraft = false;
 
 $(document).ready(function() {
 
+	setWindow(-1);
+
 	initiatePlanets();
 	initiateCrafts();
 
@@ -71,6 +73,8 @@ function drawAll(){
 	drawCrafts();
 	drawKey();
 	drawToolbar();
+	
+	drawHighlightLocal();
 }
 
 function drag(){
@@ -79,7 +83,6 @@ function drag(){
 }
 
 function mousePress(){
-	deselectAll();
 	screenSelected = true;
 	selectPlanets();
 	selectCrafts();
@@ -108,3 +111,4 @@ function changeWidth(textbox){
 	document.getElementById("myCanvas").width = textbox.value;
 	drawAll();
 }
+

@@ -31,6 +31,11 @@ function deletePlanetButton(button){
 	currentPlanet = false;
 }
 
+function planetRecenterButton(button){
+	currentPlanet.position[0] = 0;
+	currentPlanet.position[1] = 0;
+}
+
 function drawPlanets(){
 	lineWidth = 3;
 	planets.forEach(function(entry) {
