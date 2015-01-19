@@ -34,7 +34,7 @@
 		<a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Forum Thread</a>
 		<a href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator">Source</a>
 		<a href=" ">Video Instructions</a>
-		<div style="clear:both;">
+		<div style="clear:both;"></div>
 	</div>
 	<div style= "display: block">
 		<canvas id="myCanvas" 
@@ -51,7 +51,7 @@
 			<input type = "button" id="instructionsShow" value = "Help" onclick = "setWindow(4)">
 		</section>
 		<section style= "text-align: center; display: block" id = "craftEdit">
-			<h5 id = "craftColor" >Select a craft to edit</h5>
+			<h5 id = "craftColor">Select a craft to edit</h5>
 			<h1 id="label2">Untitled Space Craft</h1>
 			<div id= "craft">
 				<input type = "button" value = "Delete" onclick="deleteCraftButton(this)" align = "text-align: center"></input>
