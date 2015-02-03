@@ -13,7 +13,6 @@ var toolbar =[
 function initiateToolbar(){
 	initiatePlanetButton();
 	initiateCraftButton();
-
 }
 
 function setWindow(id){
@@ -21,9 +20,11 @@ function setWindow(id){
 		case -1:
 			$('#craftEdit').hide();
 			$('#planetEdit').hide();
-			$('#view').hide();
+			//$('#view').hide();
 			$('#trajectoryEdit').hide();
 			$('#instructions').hide();
+			$('#craftModelEdit').hide();
+			$('#planetModelEdit').hide();
 		break;
 		case 0:
 			if($('#craftEdit').is(':visible')){
@@ -43,7 +44,7 @@ function setWindow(id){
 				$('#windowButtons').after($('#planetEdit'));
 			}
 			break;
-		case 2:
+		/*case 2:
 			if($('#view').is(':visible')){
 				$('#view').hide();
 			}
@@ -51,7 +52,7 @@ function setWindow(id){
 				$('#view').show();
 				$('#windowButtons').after($('#view'));
 			}
-			break;
+			break;*/
 		case 3:
 			if($('#trajectoryEdit').is(':visible')){
 				$('#trajectoryEdit').hide();
@@ -70,11 +71,29 @@ function setWindow(id){
 				//$('#windowButtons').after($('#instructions'));
 			}
 			break;
+		case 5:
+			if($('#craftModelEdit').is(':visible')){
+				$('#craftModelEdit').hide();
+			}
+			else{
+				$('#craftModelEdit').show();
+				$('#windowButtons').after($('#craftModelEdit'));
+			}
+			break;
+		case 6:
+			if($('#planetModelEdit').is(':visible')){
+				$('#planetModelEdit').hide();
+			}
+			else{
+				$('#planetModelEdit').show();
+				$('#windowButtons').after($('#planetModelEdit'));
+			}
+			break;
 	}
 }
 
 function initiateCraftButton(){
-	var c = new Button(0, 0, 64, 16, "Crafts");
+	var c = new Button(0, 0, 48, 16, "Crafts");
 	c.onClicked = function() {
 		if (!this.showSubbar){
 		
@@ -117,7 +136,7 @@ function initiateCraftButton(){
     };
 	toolbar.push(c);
 	
-	c = new Button(128, 0, 128, 16, "Add Crafts");
+	c = new Button(112, 0, 144, 16, "Add Crafts by Model");
 	c.onClicked = function() {
 		if (!this.showSubbar){
 			this.showSubbar = true;
@@ -149,7 +168,7 @@ function initiateCraftButton(){
 }
 
 function initiatePlanetButton(){
-	var c = new Button(64, 0, 64, 16, "Planets");
+	var c = new Button(48, 0, 64, 16, "Planets");
 	c.onClicked = function() {
 		if (!this.showSubbar){
 		
@@ -192,7 +211,7 @@ function initiatePlanetButton(){
     };
 	toolbar.push(c);
 
-	c = new Button(256, 0, 128, 16, "Add Planets");
+	c = new Button(256, 0, 156, 16, "Add Planets by Model");
 	c.onClicked = function() {
 		if (!this.showSubbar){
 			this.showSubbar = true;

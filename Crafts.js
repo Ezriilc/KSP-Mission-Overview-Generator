@@ -1,7 +1,7 @@
 var craftModels = new Array();
 var crafts = new Array();
 var craftShown = false; //whether the correct craft editing menu is shown
-var craftMoreShown = false;
+//var craftModelShown = false;
 
 function CraftModel(name, color, lineWidth) {
     this.name = name;
@@ -13,45 +13,21 @@ function CraftModel(name, color, lineWidth) {
 	craftModels.push(this);
 	this.children = new Array();
 	
-	$("#craftModelSelector").append("<option value='" + craftModels.indexOf(this) + "'>" + name + "</option>");
-	
-	var v = new Button(128, toolbar[3].subbar.length * 16 + 16, 256, 16, name);
-	v.parent = toolbar[3];
-	v.model = this;
-	v.color = color;
-	v.onClicked = function() {
-		new Craft(this.model);
-		this.parent.hideSubbar();
-	};
-	toolbar[3].subbar.push(v);
+	updateSelector();
 }
 
 function Craft(model) {
     this.model = model;
 
-	this.location = 1; //in orbit: 0, on surface: 1, at endpoint: 2, arriving at planet: 3; arriving at vessel: 4;
-	this.planet = false;
+	//this.location = 1; //in orbit: 0, on surface: 1, at endpoint: 2, arriving at planet: 3; arriving at vessel: 4;
+	//this.planet = false;
 	
     this.position = [0, 0];
 	crafts.push(this);
 	
-	this.where = 0; //0: on planet
-	
 	this.selected = false;
 	model.children.push(this);
 	this.childId = model.children.indexOf(this);
-}
-
-function craftMoreButton(button){
-	if (craftMoreShown){
-		button.value = "Show Model Options";
-		$("#craftMore").hide();
-	}
-	else{
-		button.value = "Hide Model Options";
-		$("#craftMore").show();
-	}
-	craftMoreShown = !craftMoreShown;
 }
 
 function craftRecenterButton(button){
@@ -72,8 +48,6 @@ function drawCrafts(){
 	
 	crafts.forEach(function(entry) {
 	
-		//entry.position = entry.planet.position;
-	
 		if (entry == currentCraft){
 			entry.radius = 8;
 		}
@@ -90,38 +64,40 @@ function drawCrafts(){
 	
 	if (currentCraft){
 		if (!craftShown){
+		updateSelector();
 		$("#label2").show();
+		$("#label3").show();
 		$("#craft").show();
+		$("#craft2").show();
 		document.getElementById('color2').color.fromString(currentCraft.model.color);
 		document.getElementById('name2').value = currentCraft.model.name;
 		document.getElementById('width2').value = currentCraft.model.lineWidth;
-		$("#craftModelSelector").val(craftModels.indexOf(currentCraft.model));
+		//$("#craftModelSelector").val(craftModels.indexOf(currentCraft.model));
 		
-		document.getElementById("label2").innerHTML = currentCraft.model.name;
-		$("#craftColor").hide();
+		document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
+		document.getElementById("label3").innerHTML = currentCraft.model.name + " (Model)";
+		$("#selCraft").hide();
+		$("#selCraft2").hide();
 		craftShown = true;
 		}
 	}
 	else{
 		$("#craft").hide();
+		$("#craft2").hide();
 		$("#label2").hide();
-		$("#craftColor").show();
+		$("#label3").hide();
+		$("#selCraft").show();
+		$("#selCraft2").show();
 		craftShown = false;
 	}
 }
 
 function name2(textbox){
 	currentCraft.model.name = document.getElementById('name2').value;
-	toolbar[3].subbar[craftModels.indexOf(currentCraft.model)].label = currentCraft.model.name;
-	document.getElementById("label2").innerHTML = currentCraft.model.name;
-			
-	for (var x = craftModels.length; x > -1; x--){
-		document.getElementById("craftModelSelector").remove(x);
-	}
-	craftModels.forEach(function(entry) {
-		$("#craftModelSelector").append("<option value='" + craftModels.indexOf(entry) + "'>" + entry.name + "</option>");
-	});
-	$("#craftModelSelector").val(craftModels.indexOf(currentCraft.model));
+	document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
+	document.getElementById("label3").innerHTML = currentCraft.model.name + " (Model)";
+	
+	updateSelector();
 }
 function width2(textbox){
 	if (Number(document.getElementById('width2').value) != NaN 
@@ -130,10 +106,10 @@ function width2(textbox){
 	}
 }
 
-function craftModelSelector(selector){
+/*function craftModelSelector(selector){
 	currentCraft.model = craftModels[selector.value];
 	craftShown = false;
-}
+}*/
 
 function createCraftModel(button){
 	new CraftModel("Untitled Space Craft", '#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase(), 3);

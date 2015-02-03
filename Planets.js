@@ -1,29 +1,67 @@
-var planetNames = ["Su", "Mo", "Ev", "Gi", "Ke", "Mu", "Mi", "Du", "Ik", "Dr", "Jo", "La", "Ty", "Va", "Po", "Bo", "Ee"];
-var planetFullNames = ["Sun-Kerbol", "Moho", "Eve", "Gilly", "Kerbin", "Mun", "Minmus", "Duna", "Ike", "Dres", "Jool", "Laythe", "Tylo", "Vall", "Pol", "Bop", "Eeloo"];
-var planetFillColors = ['#ffe91f', '#a87316', '#7e4185', '#856e41', '#4f81bd', '#8f8e8e', '#92ff8a', '#ab2c2c', '#2e2e2e', '#7a7a7a', '#60cf4a', '#2b9cff', '#d6d6d6', '#9cced6', '#cfab36', '#634734', '#ffffff'];
-var planetFringeColors = ['#ad9e15', '#5e4617', '#4d2852', '#473b23', '#0056bd', '#5c5b5b', '#62ab5c', '#571616', '#000000', '#404040', '#418c32', '#1e6cb0', '#ababab', '#7ea7ad', '#997e28', '#3b2a1f', '#a8a8a8'];
-var planetHierarchyIndexes = [0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1]; 
-var planets = new Array();
+//var planetNames = ["Su", "Mo", "Ev", "Gi", "Ke", "Mu", "Mi", "Du", "Ik", "Dr", "Jo", "La", "Ty", "Va", "Po", "Bo", "Ee"];
+//var planetFullNames = ["Sun-Kerbol", "Moho", "Eve", "Gilly", "Kerbin", "Mun", "Minmus", "Duna", "Ike", "Dres", "Jool", "Laythe", "Tylo", "Vall", "Pol", "Bop", "Eeloo"];
+//var planetFillColors = ['#ffe91f', '#a87316', '#7e4185', '#856e41', '#4f81bd', '#8f8e8e', '#92ff8a', '#ab2c2c', '#2e2e2e', '#7a7a7a', '#60cf4a', '#2b9cff', '#d6d6d6', '#9cced6', '#cfab36', '#634734', '#ffffff'];
+//var planetFringeColors = ['#ad9e15', '#5e4617', '#4d2852', '#473b23', '#0056bd', '#5c5b5b', '#62ab5c', '#571616', '#000000', '#404040', '#418c32', '#1e6cb0', '#ababab', '#7ea7ad', '#997e28', '#3b2a1f', '#a8a8a8'];
+/*Bakcup values above: Bop and Pol switched*/
 
-var planetShown = false; //whether the correnct planet is shown
+var planetNames = ["Su", "Mo", "Ev", "Gi", "Ke", "Mu", "Mi", "Du", "Ik", "Dr", "Jo", "La", "Ty", "Va", "Bo", "Po", "Ee"];
+var planetFullNames = ["Sun-Kerbol", "Moho", "Eve", "Gilly", "Kerbin", "Mun", "Minmus", "Duna", "Ike", "Dres", "Jool", "Laythe", "Tylo", "Vall", "Bop", "Pol", "Eeloo"];
+var planetFillColors = ['#ffe91f', '#a87316', '#7e4185', '#856e41', '#4f81bd', '#8f8e8e', '#92ff8a', '#ab2c2c', '#2e2e2e', '#7a7a7a', '#60cf4a', '#2b9cff', '#d6d6d6', '#9cced6', '#634734', '#cfab36', '#ffffff'];
+var planetFringeColors = ['#ad9e15', '#5e4617', '#4d2852', '#473b23', '#0056bd', '#5c5b5b', '#62ab5c', '#571616', '#000000', '#404040', '#418c32', '#1e6cb0', '#ababab', '#7ea7ad', '#3b2a1f', '#997e28', '#a8a8a8'];
+
+var planetHierarchyIndexes = [0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1]; 
+/* Above are preset values for planet mdoels*/
+
+var planets = new Array();
+var planetModels = new Array();
+var planetShown = false; //whether the correct planet is shown
 var planetMoreShown = false;
 
-function Planet(id) {
-	this.id = id;
-    this.name = planetNames[id];
-	this.fullName = planetFullNames[id];
+function PlanetModel(name, fullName, fillColor, fringeColor, hierarchyIndex) {
+    this.name = name;
+	this.fullName = fullName;
 	
-    //this.fillColor = '#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase();	
-	//this.fringeColor = '#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase();	
-	this.fillColor = planetFillColors[id];	
-	this.fringeColor = planetFringeColors[id];		
-	//this.fillColor = fillColor;
-	//this.fringeColor = fringeColor;		
+	this.fillColor = fillColor;
+	this.fringeColor = fringeColor;
+	this.hierarchyIndex = hierarchyIndex;
 	
-    this.position = [0, 0];
-	this.radius = 32 * Math.pow(2, -planetHierarchyIndexes[id]);
+	planetModels.push(this);
+	this.children = new Array();
+	
+	updateSelector();
+}
+
+function initiatePlanets(){
+	for (var x = 0; x < 17; x++){
+		new PlanetModel(planetNames[x], planetFullNames[x], planetFillColors[x], planetFringeColors[x], planetHierarchyIndexes[x]);
+	}
+}
+
+function resetPlanetModels(button){
+	for (var x = 0; x < 17; x++){
+		planetModels[x].name = planetNames[x]; 
+		planetModels[x].fullName = planetFullNames[x]; 
+		planetModels[x].fillColor = planetFillColors[x];
+		planetModels[x].fringeColor = planetFringeColors[x];
+		planetModels[x].hierarchyIndex = planetHierarchyIndexes[x];
+	}
+	planets.forEach(function(entry) {
+		entry.radius = 32 * Math.pow(2, -entry.model.hierarchyIndex);
+	});
+	planetShown = false;
+	updateSelector();
+}
+
+function Planet(model){
+	this.model = model;
+	
+	this.position = [0, 0];
+	this.radius = 32 * Math.pow(2, -model.hierarchyIndex);
 	planets.push(this);
+	
 	this.selected = false;
+	model.children.push(this);
+	this.childId = model.children.indexOf(this);
 }
 
 function deletePlanetButton(button){
@@ -39,96 +77,69 @@ function planetRecenterButton(button){
 function drawPlanets(){
 	lineWidth = 3;
 	planets.forEach(function(entry) {
-		drawColor = entry.fillColor;
+		drawColor = entry.model.fillColor;
 		fillCircleLocal(entry.position[0], entry.position[1], entry.radius);
-		drawColor = entry.fringeColor;
+		drawColor = entry.model.fringeColor;
 		drawCircleLocal(entry.position[0], entry.position[1], entry.radius);
 	});
 	
 	if (currentPlanet){
 		if (!planetShown){
-			$("#label1").remove();
+			updateSelector();
+			$("#label1").show();
+			$("#label0").show();
 			$("#planet").show();
-			document.getElementById('color0').color.fromString(currentPlanet.fringeColor);
-			document.getElementById('color1').color.fromString(currentPlanet.fillColor);
-			document.getElementById('name1').value = currentPlanet.fullName;
-			document.getElementById('abbr').value = currentPlanet.name;
-			document.getElementById('ind').value = planetHierarchyIndexes[currentPlanet.id];
-		
-			$label1 = $("<h1 id = 'label1'>" + currentPlanet.fullName + "</h1>");
-			$("#planetColor").after($label1);
-			$("#planetColor").hide();
+			$("#planet2").show();
+			document.getElementById('color0').color.fromString(currentPlanet.model.fringeColor);
+			document.getElementById('color1').color.fromString(currentPlanet.model.fillColor);
+			document.getElementById('name1').value = currentPlanet.model.fullName;
+			document.getElementById('abbr').value = currentPlanet.model.name;
+			document.getElementById('ind').value = currentPlanet.model.hierarchyIndex;
+			document.getElementById("label1").innerHTML = currentPlanet.model.fullName  + " (Instance)";
+			document.getElementById("label0").innerHTML = currentPlanet.model.fullName  + " (Model)";
+			$("#selPlanet").hide();
+			$("#selPlanet2").hide();
 			planetShown = true;
-			$("#planetModelSelector").val(currentPlanet.id);
-				
-			//alert(planetNames.length);
-			//alert(planetFullNames.length);
-			//alert(planetFillColors.length);
-			//alert(planetFringeColors.length);
-			//alert(planetHierarchyIndexes.length);
-			
 		}
 	}
 	else{
 		$("#planet").hide();
-		$("#label1").remove();
-		$("#planetColor").show();
+		$("#planet2").hide();
+		$("#label1").hide();
+		$("#label0").hide();
+		$("#selPlanet").show();
+		$("#selPlanet2").show();
 		planetShown = false;
 	}
 }
 
 function ind(textbox){
-	planetHierarchyIndexes[currentPlanet.id] = textbox.value
-	toolbar[1].subbar[currentPlanet.id].x = toolbar[1].x + planetHierarchyIndexes[currentPlanet.id]* 12;
-	if (currentPlanet.id > 16){toolbar[1].subbar[currentPlanet.id].x +=128;}
+	currentPlanet.model.hierarchyIndex = textbox.value;
 	planets.forEach(function(entry) {
-		entry.radius = 32 * Math.pow(2, -planetHierarchyIndexes[entry.id]);
+		entry.radius = 32 * Math.pow(2, -entry.model.hierarchyIndex);
 	});
 }
 
 function name1(textbox){
-	planetFullNames[currentPlanet.id] = document.getElementById('name1').value;
-	currentPlanet.fullName = planetFullNames[currentPlanet.id];
-	toolbar[1].subbar[currentPlanet.id].label = planetFullNames[currentPlanet.id];
-			
-	for (var x = planetFullNames.length; x > -1; x--){
-		document.getElementById("planetModelSelector").remove(x);
-	}
-	planetFullNames.forEach(function(entry) {
-		$("#planetModelSelector").append("<option value='" + planetFullNames.indexOf(entry) + "'>" + entry + "</option>");
-	});
-	$("#planetModelSelector").val(currentPlanet.id);
-			
+	currentPlanet.model.fullName = document.getElementById('name1').value;
+	updateSelector();
 	planetShown = false;
 }
 
 function abbr(textbox){
-	planetNames[currentCraft.id] = document.getElementById('abbr').value;
-	currentPlanet.name = planetNames[currentCraft.id];
+	currentPlanet.model.name = document.getElementById('abbr').value;
 }
 
 function createPlanetModel(button){
-
-	planetNames.push("Un");
-	planetFullNames.push("Untitled Planet");
-	planetFillColors.push('#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase());
-	planetFringeColors.push('#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase());
-	planetHierarchyIndexes.push(Math.round(Math.random() * 3 - 0.5));
-	$("#planetModelSelector").append("<option value='" + (planetFullNames.length - 1) + "'>" + "Untitled Planet" + "</option>");
-	
-	var v = new Button(toolbar[1].x + 128, (toolbar[1].subbar.length - 17) * 16 + 16, 128, 16, planetFullNames[toolbar[1].subbar.length]);
-	v.parent = toolbar[1];
-	v.pid = toolbar[1].subbar.length; //one more than the highest
-	v.color = planetFringeColors[v.pid];
-	v.x += planetHierarchyIndexes[v.pid]* 12;
-	v.onClicked = function() {
-		new Planet(this.pid);
-		this.parent.hideSubbar();
-	};
-	toolbar[1].subbar.push(v);
+	new PlanetModel("Un", 
+		"Untitled Planet", 
+		'#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase(), 
+		'#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase(), 
+		Math.round(Math.random() * 3 - 0.5));
+	updateSelector();
 }
 
-function planetModelSelector(selector){
+/*function planetModelSelector(selector){
 	currentPlanet.name = planetNames[selector.value];
 	currentPlanet.fullName = planetFullNames[selector.value];
 	currentPlanet.fillColor = planetFillColors[selector.value];
@@ -136,7 +147,7 @@ function planetModelSelector(selector){
 	currentPlanet.radius = 32 * Math.pow(2, -planetHierarchyIndexes[selector.value]);
 	currentPlanet.id = selector.value;
 	planetShown = false;
-}
+}*/
 
 function planetMoreButton(button){
 	if (planetMoreShown){
@@ -148,13 +159,6 @@ function planetMoreButton(button){
 		$("#planetMore").show();
 	}
 	planetMoreShown = !planetMoreShown;
-}
-
-function initiatePlanets(){
-	$("#planetMore").hide();
-	planetFullNames.forEach(function(entry) {
-		$("#planetModelSelector").append("<option value='" + planetFullNames.indexOf(entry) + "'>" + entry + "</option>");
-	});
 }
 
 function selectPlanets(){
