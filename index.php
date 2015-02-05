@@ -10,8 +10,8 @@
 	
     <meta charset="utf-8" />
     <meta name="msapplication-config" content="none"/>
-    <meta name="description" content="Example PHP/HTML Page"/>
-    <meta name="author" content="Ezriilc"/>
+    <meta name="description" content="Mission Profile Notation Generator"/>
+    <meta name="author" content="Thunderous Echo"/>
     <meta name="keywords" content="php, web page, example"/>
 	
 	<script type="text/javascript" src="MPN.js"></script>
