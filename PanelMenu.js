@@ -15,12 +15,27 @@ function updateSelectorSize(){
 	canvasObject.setAttribute('width', ((window.innerWidth - 1100) / 2) + "");
 	canvasObject.setAttribute('height', planetModels.length * keyFontSize + 4 + "");*/
 }
+
+function al(){
+	alert("test");
+}
 function updateSelector(){
+	var x = window.scrollX;
+	var y = window.scrollY;
 	//updateSelectorSize();
 	$("#craftSel").empty();
 	var ind = 0;
+	//alert("update");
+	if (craftModels.length == 1){
+		document.getElementById("deleteCraftModelButton").style.color = "#808080";
+	}
+	else{
+		document.getElementById("deleteCraftModelButton").style.color = "#000000";
+	}
+			
 	craftModels.forEach(function(entry) {
-		$("#craftSel").append("<section id = 'cmodelsec" + ind + "'><button><canvas id = 'cmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
+		$("#craftSel").append("<section id = 'cmodelsec" + ind + "'><button onclick='currentCraftModel = craftModels[" + ind + "]; craftModelShown = false'><canvas id = 'cmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
+		//$("#craftSel").append("<section id = 'cmodelsec" + ind + "'><button><canvas id = 'cmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
 		
 		var canvas = document.getElementById("cmodel" + ind);
 		var context = canvas.getContext("2d");
@@ -32,28 +47,37 @@ function updateSelector(){
 		context.stroke();
 		
 		context.fillStyle = entry.color;
-		context.font = keyFont;
-		context.fillText(entry.name, 2 + keyLineLength, keyFontSize);
+		
+		if (currentCraftModel == entry){
+			context.font = "Bold " + keyFont;
+			context.fillText("*" + entry.name, 2 + keyLineLength, keyFontSize);
+			$("#cmodelsec" + ind).click(function(){currentCraftModel = false; updateSelector();});
+		}
+		else{
+			context.font = keyFont;
+			context.fillText(entry.name, 2 + keyLineLength, keyFontSize);
+		}
 		
 		$("#cmodelsec" + ind).append("<p></p>Instances: ");
 		var v = 0;
 		entry.children.forEach(function(ent) {
 			v++;
 			if (ent == currentCraft){
-				$("#cmodelsec" + ind).append("<button style = 'font-weight: bold; color:" + entry.color + "'>" + v + "*</button>");
+				$("#cmodelsec" + ind).append("<button onclick = 'currentCraft = false; updateSelector()' style = 'font-weight: bold; color:" + entry.color + "'>*" + v + "</button>");
 			}
 			else{
-				$("#cmodelsec" + ind).append("<button style = 'color:" + entry.color + "'>" + v + "</button>");
+				$("#cmodelsec" + ind).append("<button onclick='currentCraft = craftModels[" + ind + "].children[" + (v-1) + "]; craftShown = false' style = 'color:" + entry.color + "'>" + v + "</button>");
 			}
 		});
-		$("#cmodelsec" + ind).append("<button>+</button>");
+		$("#cmodelsec" + ind).append("<button onclick='new Craft(craftModels[" + ind + "]); updateSelector()'>+</button>");
 		ind++;
 	});
 	
 	$("#planetSel").empty();
 	ind = 0;
 	planetModels.forEach(function(entry) {
-		$("#planetSel").append("<section id = 'pmodelsec" + ind + "'><button><canvas id = 'pmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
+		$("#planetSel").append("<section id = 'pmodelsec" + ind + "'><button onclick='currentPlanetModel = planetModels[" + ind + "]; planetModelShown = false;'><canvas id = 'pmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
+		//$("#planetSel").append("<section id = 'pmodelsec" + ind + "'><button><canvas id = 'pmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
 		
 		var canvas = document.getElementById("pmodel" + ind);
 		var context = canvas.getContext("2d");
@@ -67,23 +91,32 @@ function updateSelector(){
 		context.stroke();
 		
 		context.fillStyle = entry.fringeColor;
-		context.font = keyFont;
-		context.fillText(entry.fullName, 2 + keyLineLength, keyFontSize);
+		if (currentPlanetModel == entry){
+			context.font = "Bold " + keyFont;
+			context.fillText("*" + entry.fullName, 2 + keyLineLength, keyFontSize);
+			$("#pmodelsec" + ind).click(function(){currentPlanetModel = false; updateSelector();});
+		}
+		else{
+			context.font = keyFont;
+			context.fillText(entry.fullName, 2 + keyLineLength, keyFontSize);
+		}
 		
 		$("#pmodelsec" + ind).append("<p></p>Instances: ");
 		var v = 0;
 		entry.children.forEach(function(ent) {
 			v++;
 			if (ent == currentPlanet){
-				$("#pmodelsec" + ind).append("<button style = 'font-weight: bold; color:" + entry.fringeColor + "'>" + v + "*</button>");
+				$("#pmodelsec" + ind).append("<button onclick='currentPlanet = false; updateSelector()' style = 'font-weight: bold; color:" + entry.fringeColor + "'>*" + v + "</button>");
 			}
 			else{
-				$("#pmodelsec" + ind).append("<button style = 'color:" + entry.fringeColor + "'>" + v + "</button>");
+				//$("#pmodelsec" + ind).append("<button style = 'color:" + entry.fringeColor + "'>" + v + "</button>");
+				$("#pmodelsec" + ind).append("<button onclick='currentPlanet = planetModels[" + ind + "].children[" + (v-1) + "]; planetShown = false' style = 'color:" + entry.fringeColor + "'>" + v + "</button>");
 			}
 		});
-		$("#pmodelsec" + ind).append("<button>+</button>");
+		$("#pmodelsec" + ind).append("<button onclick='new Planet(planetModels[" + ind + "]); updateSelector()'>+</button>");
 		ind++;
 	});
+	window.scrollTo(x, y);
 }
 
 function setPopout(id){

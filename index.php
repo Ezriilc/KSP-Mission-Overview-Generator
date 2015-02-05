@@ -75,9 +75,9 @@
 			</section>
 			<section style= "text-align: right; display: table-cell">
 				<h1 style = "text-align: left">Snap</h1>
-				<p></p>x:  <input id="width" type = "text" size = "3" onchange = "a(this)" value = "0"></input>
-				<p></p>y:  <input id="height" type = "text" size = "3" onchange = "a(this)" value="0"></input>
-				<p></p>r: 	<input id="height" type = "text" size = "3" onchange = "a(this)" value="4"></input>
+				<p></p>Horizontal:  <input id="horizontalSnap" type = "text" size = "3" value = "0"></input>
+				<p></p>Vertical:  <input id="verticalSnap" type = "text" size = "3" value="0"></input>
+				<p></p>Radial: 	<input id="radialSnap" type = "text" size = "3" value="0"></input>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Help</h1>
@@ -96,18 +96,16 @@
 				<h1 id="label2">Untitled Space Craft</h1>
 				<input type = "button" value = "Delete" onclick="deleteCraftButton(this)" align = "text-align: center"></input>
 				<input type = "button" value = "Recenter" onclick="craftRecenterButton(this)" align = "text-align: center"></input>
-				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false; updateSelector();" align = "text-align: center"></input>
-				<p></p>
-					Model:   
-					<select id = "craftModelChanger" onchange = "craftModelSelector(this)" style = "width: 128px">
-					</select>
+				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false" align = "text-align: center"></input>
+				<p id="label4">Model:
+				<button id="label5" onclick = "setCraftModelToCurrent()">Change to selected model: "Untitled Space Craft"</button></p>
 			</div>
 		</section>
 		<section style= "text-align: center; display: block" id = "craftModelEdit">
-			<h5 id = "selCraft2">Select a craft to edit the model it uses</h5>
+			<h5 id = "selCraft2">Select a craft model to edit</h5>
 			<div id= "craft2">
 				<h1 id="label3">Untitled Space Craft</h1>
-				<input type = "button" value = "Delete" onclick="a(this)" align = "text-align: center"></input>
+				<input id = "deleteCraftModelButton" type = "button" value = "Delete" onclick="deleteCraftModelButton(this)" align = "text-align: center"></input>
 				<input type = "button" value = "Deselect" onclick="a" align = "text-align: center"></input>
 				<p>Name:   <input id="name2" type = "text" onchange = "name2(this)"></input></p>
 				<p>Color:   <input id="color2" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerClosable:true,onImmediateChange:'updateColor(this, 2);'}"></p>
@@ -120,18 +118,16 @@
 				<div id= "planet" align = "text-align: right">
 					<input type = "button" value = "Delete" onclick="deletePlanetButton(this)" align = "text-align: center"></input>
 					<input type = "button" value = "Recenter" onclick="planetRecenterButton(this)" align = "text-align: center"></input>
-					<input type = "button" value = "Deselect" onclick="currentPlanet = false; planetShown = false; updateSelector();" align = "text-align: center"></input>
-					<p></p>
-						Model:   
-						<select id = "planetModelChanger" onchange = "planetModelSelector(this)" style = "width: 128px">
-						</select>
+					<input type = "button" value = "Deselect" onclick="currentPlanet = false; planetShown = false" align = "text-align: center"></input>
+					<p id="label6">Model:
+					<button id="label7" onclick = "setPlanetModelToCurrent()">Change to selected model: "Untitled Planet"</button></p>
 				</div>
 			</section>
 			<section style= "text-align: center; display: block" id = "planetModelEdit">
-				<h5 id = "selPlanet2" >Select a planet to edit the model it uses</h5>
+				<h5 id = "selPlanet2">Select a planet model to edit</h5>
 				<h1 id="label0">Untitled Planet</h1>
 				<div id= "planet2" align = "text-align: right">
-					<input type = "button" value = "Delete" onclick="a(this)" align = "text-align: center"></input>
+					<input id = "deletePlanetModelButton" type = "button" value = "Delete" onclick="deletePlanetModelButton(this)" align = "text-align: center"></input>
 					<input type = "button" value = "Deselect" onclick="a" align = "text-align: center"></input>
 					<p></p>
 					Name:   <input id="name1" type = "text" onchange = "name1(this)"></input>
@@ -185,29 +181,27 @@
 			<h1>Help</h1>
 				<p></p>
 				<h2>Crafts and Planets</h2>
-					<p>Click on "Crafts" or "Planets" in the toolbar to show buttons for selecting crafts and planets on the screen. You can hover over these to show which button corresponds to which craft or planet.</p>
 					<h4>Crafts</h4>
 					<h4>Planets</h4>
-						<p>The "Planets" button in the toolbar allows you to see abbreviations of planets as well as names.</p>
 					<h4>Editing Sections</h4>
-						<p>To open this section, select a craft or planet by clicking on it or through the toolbar, then click "Edit: Crafts" or "Edit: Planets"</p>
+						<p>To open this section, select a craft or planet by clicking on it or by clicking on its instance number in the "Craft Models" or "Planet Models" lists under its model, then click "Crafts" or "Planets" under "Edit".</p>
 						<ul>
 							<li>"Delete" deletes the craft or planet, <strong>not</strong> the model.</li>
-							<li>"Recenter" moves the planet to 0, 0. </li>
+							<li>"Recenter" moves the planet to the center of the screen.</li>
 							<li>"Deselect" deselects the craft or planet. </li>
-							<li>The Model drop down menu allows you to select which model a craft or planet uses. </li>
-							<li>The "+" button next to it allows you to create new models.</li>
+							<li>"Model" changes the model this craft or planet uses to the currently selected model. Select models through the "Craft Models" or "Planet Models" list.</p>
 						</ul>
 				<h2>Models</h2>
 					<p>Each craft or planet on the screen derives its appearance and name from a model. Because all Kerbins use the same model, all Kerbins will look the same. Likewise, all copies of the same spacecraft will look the same. Models appear in the key if they are in use.</p>
-					<p>To create a craft or planet that uses a certain model, click on "Add Crafts" or "Add Planets" in the toolbar. You can change the model that an existing craft or planet uses through the Model drop-down menu in its editing section. The "+" button next to it allows you to create new models.</p>
+					<p>To create a craft or planet that uses a certain model, click the "+" in the "Craft Models" or "Planet Models" list under the model you want to add an instance of. You can change the model that an existing craft or planet uses through its editing section.</p>
 					<h4>Editing Sections</h4>
-						<p>To open this section, select a craft or planet by clicking on it or through the toolbar, then click "Edit: Craft Models" or "Edit: Planet Models"</p>
+						<p>To open this section, select a craft model or planet model by clicking on it in the "Craft Models" or "Planet Models" lists, then click "Craft Models" or "Planet Models" under "Edit".</p>
 						<ul>
 							<li>"Name" is the name of a model (that will appear in the Key). </li>
 							<li>"Abbreviation" (Planets) is the abbreviation that will appear on decals labelling planets that use this model. </li>
 							<li>"Outline Color"(Planets), "Fill Color"(Planets), and "Color" (Crafts) are the colors that appear on crafts or planets that use this model. </li>
 							<li>"Line Width" (Crafts) is the line width used to draw the paths of crafts that use this model.</li>
+							<li>"Hierarchical Index" (Planets): See below.</li>
 						</ul>
 						<h5>Hierarchical Index</h5>
 							<p>The representative size of a planet depends on what it is orbiting. Sun-Kerbol is hierarchical index 0, so it it the biggest. Things orbiting Sun-Kerbol are hierarchical index 1, so they are half the size. Things orbiting things orbiting Sun-Kerbol are hierarchical index 2, so they are half <i>that size</i>, and so on.</p>
@@ -216,12 +210,18 @@
 							<p>If you set a hierarchical index to -4, that planet will be represented as 16 times larger than Sun-Kerbol. Please edit responsibly.</p>
 			<h2>Key</h2>
 				<p>The Key is the black rounded rectangle on the viewing canvas. This will appear in the final Overview. The Key shows which crafts and planets are which.</p>
-				<p>The Key can be dragged around by its center. You can change its size by dragging on the edges and corners.</p>
+				<p>The Key can be dragged around by dragging it on its center. You can change its size by dragging on the edges and corners.</p>
 				<p>If the Key appears red, it is too small for is contents! Resize it larger!</p>
 			<h2>View</h2>
 				<ul>
-					<li>"Dimensions" allows you to change the dimensions of the viewing canvas.</li>
+					<li>"Size" allows you to change the dimensions of the final Overview.</li>
 				</ul>
+			<h2>Snap</h2>
+				<p>All Snap values are in pixels.</p>
+			<h2>Craft Models and Planet Models sidebars</h2>
+				<p>Crafts can be selected from here by clicking
+				<p>You cannot delete any of the stock planets and must have at least 1 craft model at all times.</p>
+			
 	</section>
 	<p>MOG</p>
 </body>

@@ -15,7 +15,8 @@ var planetHierarchyIndexes = [0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1]
 var planets = new Array();
 var planetModels = new Array();
 var planetShown = false; //whether the correct planet is shown
-var planetMoreShown = false;
+//var planetMoreShown = false;
+var planetModelShown = false;
 
 function PlanetModel(name, fullName, fillColor, fringeColor, hierarchyIndex) {
     this.name = name;
@@ -66,7 +67,31 @@ function Planet(model){
 
 function deletePlanetButton(button){
     planets.splice(planets.indexOf(currentPlanet), 1);
+	currentPlanet.model.children.splice(currentPlanet.model.children.indexOf(currentPlanet), 1);
+	updateSelector();
 	currentPlanet = false;
+}
+
+function deletePlanetModelButton(button){
+	if (planetModels.indexOf(currentPlanetModel) > 16){
+		planetModels.splice(craftModels.indexOf(currentPlanetModel), 1);
+		currentPlanetModel.children.forEach(function(entry) {
+			entry.model = planetModels[0];
+			planetModels[0].children.push(entry);
+			entry.childId = entry.model.children.indexOf(entry);
+		});
+		planetShown = false;
+		currentPlanetModel = false;
+		updateSelector();
+	}
+}
+
+function setPlanetModelToCurrent(ind){
+	currentPlanet.model.children.splice(currentPlanet.model.children.indexOf(currentPlanet), 1);
+	currentPlanet.model = currentPlanetModel;
+	currentPlanetModel.children.push(currentPlanet);
+	planetShown = false;
+	currentPlanet.radius = 32 * Math.pow(2, -currentPlanet.model.hierarchyIndex);
 }
 
 function planetRecenterButton(button){
@@ -87,47 +112,85 @@ function drawPlanets(){
 		if (!planetShown){
 			updateSelector();
 			$("#label1").show();
-			$("#label0").show();
+			//$("#label0").show();//
 			$("#planet").show();
-			$("#planet2").show();
-			document.getElementById('color0').color.fromString(currentPlanet.model.fringeColor);
-			document.getElementById('color1').color.fromString(currentPlanet.model.fillColor);
-			document.getElementById('name1').value = currentPlanet.model.fullName;
-			document.getElementById('abbr').value = currentPlanet.model.name;
-			document.getElementById('ind').value = currentPlanet.model.hierarchyIndex;
+			//$("#planet2").show();//
+			//document.getElementById('color0').color.fromString(currentPlanet.model.fringeColor);//
+			//document.getElementById('color1').color.fromString(currentPlanet.model.fillColor);//
+			//document.getElementById('name1').value = currentPlanet.model.fullName;//
+			//document.getElementById('abbr').value = currentPlanet.model.name;//
+			//document.getElementById('ind').value = currentPlanet.model.hierarchyIndex;//
 			document.getElementById("label1").innerHTML = currentPlanet.model.fullName  + " (Instance)";
-			document.getElementById("label0").innerHTML = currentPlanet.model.fullName  + " (Model)";
+			//document.getElementById("label0").innerHTML = currentPlanet.model.fullName  + " (Model)";//
 			$("#selPlanet").hide();
-			$("#selPlanet2").hide();
+			$("#selPlanet2").hide();//
 			planetShown = true;
 		}
 	}
 	else{
 		$("#planet").hide();
-		$("#planet2").hide();
+		//$("#planet2").hide();//
 		$("#label1").hide();
-		$("#label0").hide();
+		//$("#label0").hide();//
 		$("#selPlanet").show();
-		$("#selPlanet2").show();
+		//$("#selPlanet2").show();//
 		planetShown = false;
+	}
+	
+	if (currentPlanetModel){
+		$("#label6").show();
+		if (!planetModelShown){
+			if (planetModels.indexOf(currentPlanetModel) <= 16){
+				document.getElementById("deletePlanetModelButton").style.color = "#808080";
+			}
+			else{
+				document.getElementById("deletePlanetModelButton").style.color = "#000000";
+			}
+			updateSelector();
+			//$("#label1").show();
+			$("#label0").show();
+			//$("#planet").show();
+			$("#planet2").show();
+			document.getElementById('color0').color.fromString(currentPlanetModel.fringeColor);
+			document.getElementById('color1').color.fromString(currentPlanetModel.fillColor);
+			document.getElementById('name1').value = currentPlanetModel.fullName;
+			document.getElementById('abbr').value = currentPlanetModel.name;
+			document.getElementById('ind').value = currentPlanetModel.hierarchyIndex;
+			//document.getElementById("label1").innerHTML = currentPlanet.model.fullName  + " (Instance)";
+			document.getElementById("label0").innerHTML = currentPlanetModel.fullName  + " (Model)";
+			document.getElementById("label7").innerHTML = "Change to selected model: '" + currentPlanetModel.fullName + "'";
+			//$("#selPlanet").hide();
+			$("#selPlanet2").hide();
+			planetModelShown = true;
+		}
+	}
+	else{
+		$("#label6").hide();
+		//$("#planet").hide();
+		$("#planet2").hide();
+		//$("#label1").hide();
+		$("#label0").hide();
+		//$("#selPlanet").show();
+		$("#selPlanet2").show();
+		planetModelShown = false;
 	}
 }
 
 function ind(textbox){
-	currentPlanet.model.hierarchyIndex = textbox.value;
+	currentPlanetModel.hierarchyIndex = textbox.value;
 	planets.forEach(function(entry) {
 		entry.radius = 32 * Math.pow(2, -entry.model.hierarchyIndex);
 	});
 }
 
 function name1(textbox){
-	currentPlanet.model.fullName = document.getElementById('name1').value;
+	currentPlanetModel.fullName = document.getElementById('name1').value;
 	updateSelector();
 	planetShown = false;
 }
 
 function abbr(textbox){
-	currentPlanet.model.name = document.getElementById('abbr').value;
+	currentPlanetModel.name = document.getElementById('abbr').value;
 }
 
 function createPlanetModel(button){
@@ -149,7 +212,7 @@ function createPlanetModel(button){
 	planetShown = false;
 }*/
 
-function planetMoreButton(button){
+/*function planetMoreButton(button){
 	if (planetMoreShown){
 		button.value = "Show Model Options";
 		$("#planetMore").hide();
@@ -159,7 +222,7 @@ function planetMoreButton(button){
 		$("#planetMore").show();
 	}
 	planetMoreShown = !planetMoreShown;
-}
+}*/
 
 function selectPlanets(){
 	planets.forEach(function(entry) {
@@ -184,9 +247,7 @@ function dragPlanets(){
 			entry.position[0] = locateMouseX() - midScreenPos[0];
 			entry.position[1] = locateMouseY() - midScreenPos[1];
 		}
-		if (!mode){
-			snapToLane(entry);
-		}
+		snap(entry);
 	});
 }
 
@@ -194,6 +255,13 @@ function distance(x1, y1, x2, y2){
    return Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
 };
 
-function snapToLane(planet){
-	planet.position[1] = laneWidth * Math.round(planet.position[1] / laneWidth);
+function snap(thing){
+	var vert = Number(document.getElementById("verticalSnap").value);
+	if (vert > 0){
+		thing.position[1] = vert * Math.round(thing.position[1] / vert);
+	}
+	var horiz = Number(document.getElementById("horizontalSnap").value);
+	if (horiz > 0){
+		thing.position[0] = horiz * Math.round(thing.position[0] / horiz);
+	}
 }

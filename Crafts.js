@@ -1,7 +1,7 @@
 var craftModels = new Array();
 var crafts = new Array();
 var craftShown = false; //whether the correct craft editing menu is shown
-//var craftModelShown = false;
+var craftModelShown = false;
 
 function CraftModel(name, color, lineWidth) {
     this.name = name;
@@ -41,13 +41,34 @@ function initiateCrafts(){
 
 function deleteCraftButton(button){
 	crafts.splice(crafts.indexOf(currentCraft), 1);
+	currentCraft.model.children.splice(currentCraft.model.children.indexOf(currentCraft), 1);
+	updateSelector();
 	currentCraft = false;
 }
 
+function deleteCraftModelButton(button){
+	if (craftModels.length != 1){
+		craftModels.splice(craftModels.indexOf(currentCraftModel), 1);
+		currentCraftModel.children.forEach(function(entry) {
+			entry.model = craftModels[0];
+			craftModels[0].children.push(entry);
+			entry.childId = entry.model.children.indexOf(entry);
+		});
+		craftShown = false;
+		currentCraftModel = false;
+		updateSelector();
+	}
+}
+
+function setCraftModelToCurrent(ind){
+	currentCraft.model.children.splice(currentCraft.model.children.indexOf(currentCraft), 1);
+	currentCraft.model = currentCraftModel;
+	currentCraftModel.children.push(currentCraft);
+	craftShown = false;
+}
+
 function drawCrafts(){
-	
 	crafts.forEach(function(entry) {
-	
 		if (entry == currentCraft){
 			entry.radius = 8;
 		}
@@ -66,43 +87,76 @@ function drawCrafts(){
 		if (!craftShown){
 		updateSelector();
 		$("#label2").show();
-		$("#label3").show();
+		//$("#label3").show();
 		$("#craft").show();
-		$("#craft2").show();
-		document.getElementById('color2').color.fromString(currentCraft.model.color);
+		//$("#craft2").show();
+		/*document.getElementById('color2').color.fromString(currentCraft.model.color);
 		document.getElementById('name2').value = currentCraft.model.name;
-		document.getElementById('width2').value = currentCraft.model.lineWidth;
+		document.getElementById('width2').value = currentCraft.model.lineWidth;*/
 		//$("#craftModelSelector").val(craftModels.indexOf(currentCraft.model));
 		
 		document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
-		document.getElementById("label3").innerHTML = currentCraft.model.name + " (Model)";
+		//document.getElementById("label3").innerHTML = currentCraft.model.name + " (Model)";
 		$("#selCraft").hide();
-		$("#selCraft2").hide();
+		//$("#selCraft2").hide();
 		craftShown = true;
 		}
 	}
 	else{
 		$("#craft").hide();
-		$("#craft2").hide();
+		//$("#craft2").hide();
 		$("#label2").hide();
-		$("#label3").hide();
+		//$("#label3").hide();
 		$("#selCraft").show();
-		$("#selCraft2").show();
+		//$("#selCraft2").show();
 		craftShown = false;
+	}
+	
+	if (currentCraftModel){
+		$("#label4").show();
+		if (!craftModelShown){
+			updateSelector();
+		//$("#label2").show();
+			$("#label3").show();
+		//$("#craft").show();
+			$("#craft2").show();
+			document.getElementById('color2').color.fromString(currentCraftModel.color);
+			document.getElementById('name2').value = currentCraftModel.name;
+			document.getElementById('width2').value = currentCraftModel.lineWidth;
+		//$("#craftModelSelector").val(craftModels.indexOf(currentCraft.model));
+			document.getElementById("label5").innerHTML = "Change to selected model: '" + currentCraftModel.name + "'";
+		//document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";;
+			document.getElementById("label3").innerHTML = currentCraftModel.name + " (Model)";
+		//$("#selCraft").hide();
+			$("#selCraft2").hide();
+			craftModelShown = true;
+		}
+	}
+	else{
+		//$("#craft").hide();
+		$("#craft2").hide();
+		//$("#label2").hide();
+		$("#label3").hide();
+		//$("#selCraft").show();
+		$("#selCraft2").show();
+		craftModelShown = false;
+		$("#label4").hide();
 	}
 }
 
 function name2(textbox){
-	currentCraft.model.name = document.getElementById('name2').value;
+	//currentCraft.model.name = document.getElementById('name2').value;
+	currentCraftModel.name = document.getElementById('name2').value;
 	document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
-	document.getElementById("label3").innerHTML = currentCraft.model.name + " (Model)";
-	
+	//document.getElementById("label3").innerHTML = currentCraftModel.name + " (Model)";
+	craftModelShown = false;
 	updateSelector();
 }
 function width2(textbox){
 	if (Number(document.getElementById('width2').value) != NaN 
 	&& Number(document.getElementById('width2').value) > 0){
-		currentCraft.model.lineWidth = Number(document.getElementById('width2').value);
+		//currentCraft.model.lineWidth = Number(document.getElementById('width2').value);
+		currentCraftModel.lineWidth = Number(document.getElementById('width2').value);
 	}
 }
 

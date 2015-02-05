@@ -1,12 +1,12 @@
 var click = false;
-var mode = true; //linear = false, flowchart = true
+//var mode = true; //linear = false, flowchart = true
 var laneWidth = 64;
 var screenSelected = false;
 
 var currentPlanet = false;
 var currentCraft = false;
-//var currentCraftModel = false;
-//var currentPlanetModel = false;
+var currentCraftModel = false;
+var currentPlanetModel = false;
 
 $(document).ready(function() {
 
@@ -19,8 +19,6 @@ $(document).ready(function() {
 
 	var p = new Planet(planetModels[4]);
 	var c = new Craft(m);
-	c = new Craft(m);
-	c = new Craft(m);
 	drawAll();
 	updateSelector();
 
