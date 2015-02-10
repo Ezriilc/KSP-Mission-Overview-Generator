@@ -8,6 +8,8 @@ var currentCraft = false;
 var currentCraftModel = false;
 var currentPlanetModel = false;
 
+var shouldDrawGridlines = false;
+
 $(document).ready(function() {
 
 	setWindow(-1);
@@ -19,6 +21,8 @@ $(document).ready(function() {
 
 	var p = new Planet(planetModels[4]);
 	var c = new Craft(m);
+	c.parentPlanet = p;
+	c.type = 2;
 	drawAll();
 	updateSelector();
 
@@ -48,7 +52,8 @@ $(document).ready(function() {
 });
 
 function drawAll(){
-	//updateSelector();
+	$("#warnings").empty();
+
 	pageMouseX = event.pageX;
 	pageMouseY = event.pageY;
 	
@@ -60,6 +65,8 @@ function drawAll(){
 	midScreenPos[1] = screenPos[1] + rect.height / 2;
 	drawColor = '#ffffff';
 	fillRect(0, 0, rect.width, rect.height);
+	
+	drawGridlines();
 
 	drawPlanets();
 	drawCrafts();
@@ -67,10 +74,17 @@ function drawAll(){
 	//drawToolbar();
 	
 	drawHighlightLocal();
+	if($("#warnings:empty").length > 0){ //if there is at least 1 empty "#warnings"
+		$("#warningSection").hide();
+	}
+	else{
+		$("#warningSection").show();
+	}
 }
 
 function drag(){
 	dragPlanets();
+	dragCrafts();
 	dragKey();
 }
 
@@ -87,11 +101,11 @@ function deselectAll(){
 	deselectCrafts();
 	deselectPlanets();
 	deselectKey();
+	drawAll();
 }
 
 function mouseRelease(){
-	deselectPlanets();
-	deselectKey();
+	deselectAll();
 }
 
 function changeHeight(textbox){

@@ -246,8 +246,8 @@ function dragPlanets(){
 		if(entry.selected){
 			entry.position[0] = locateMouseX() - midScreenPos[0];
 			entry.position[1] = locateMouseY() - midScreenPos[1];
+			snap(entry.position);
 		}
-		snap(entry);
 	});
 }
 
@@ -255,13 +255,13 @@ function distance(x1, y1, x2, y2){
    return Math.sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
 };
 
-function snap(thing){
+function snap(pos){
 	var vert = Number(document.getElementById("verticalSnap").value);
 	if (vert > 0){
-		thing.position[1] = vert * Math.round(thing.position[1] / vert);
+		pos[1] = vert * Math.round(pos[1] / vert);
 	}
 	var horiz = Number(document.getElementById("horizontalSnap").value);
 	if (horiz > 0){
-		thing.position[0] = horiz * Math.round(thing.position[0] / horiz);
+		pos[0] = horiz * Math.round(pos[0] / horiz);
 	}
 }

@@ -11,25 +11,21 @@ var keyFont = '16pt Calibri';
 var keyFontSize = 16;
 var keyLineLength = 16;
 
-function drawKey(){
-
+function drawKey(){ /* TEXT WRAPPING CODE START*/
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
 	
 	var minStringWidth = 0;
 	context.font = keyFont;
 
-	var itX = 1;
-	var itY = 0;
-	var numP = 0;
+	var itX = 1; //(misnamed): current number of items so far in the y direction (in this column)
+	var itY = 0; //(misnamed): current number of columns so far in the x direction
 	
 	var shouldDraw = false;
 	
-	planetModels.forEach(function(entry) {
-	
+	planetModels.forEach(function(entry) { /*START code that counts number of items to draw and determines how many columns to divide them into*/
 		shouldDraw = false;
-		
-		planets.forEach(function(ent) {
+		planets.forEach(function(ent) { //check whether an instance of this model exists
 			if (ent.model == entry){shouldDraw = true;}
 		});
 		
@@ -43,7 +39,6 @@ function drawKey(){
 			}
 			itX++;
 		}
-		numP++;
 	});
 	
 	craftModels.forEach(function(entry) {
@@ -55,33 +50,29 @@ function drawKey(){
 		});
 		
 		if (shouldDraw){
-		
 			minStringWidth = Math.max(minStringWidth, context.measureText(entry.name).width);
-		
 			if (itX * keyFontSize + 4 > keyHeight - 4){
 				itX = 1;
 				itY ++;
 			}
 			itX++;
 		}
-	});
+	}); /*END code that counts number of items to draw and determines how many columns to divide them into*/
 	
-	var spaceX = keyWidth / (itY + 1);
-	itX = 1;
+	var spaceX = keyWidth / (itY + 1); //width of each column
+	itX = 1; //reset iteration variables to actually draw key
 	itY = 0;
-	numP = 0;
 	
-	drawColor = '#ffffff'
-	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, true);
-	drawColor = '#000000'
+	drawColor = '#ffffff' //key fill color
+	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, true);//fill key with white
+	drawColor = '#000000' //key border color
 	if (spaceX < minStringWidth + keyLineLength + 8|| keyHeight < keyFontSize + 8){
-		drawColor = '#ff0000'
+		drawColor = '#ff0000'//if the key is too small for contents, change the border color to red
 	}
 	lineWidth = keyBorderWidth * 2;
-	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, false);
+	roundedRectLocal(keyX, keyY, keyWidth, keyHeight, 4, false);//draw border around key
 	
 	planetModels.forEach(function(entry) {
-	
 		shouldDraw = false;
 		planets.forEach(function(ent) {
 			if (ent.model == entry){shouldDraw = true;}
@@ -95,16 +86,6 @@ function drawKey(){
 		
 			var wCol = entry.fringeColor;
 			drawColor = entry.fringeColor;
-		/*if(containsMouse(keyX + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX, keyFontSize)){
-			roundedRectLocal(keyX + 2 + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 6, keyFontSize + 2, 4, true);
-			wCol = '#ffffff';
-			drawColor = '#ffffff';
-		}
-		
-		if (entry.selected){
-			roundedRectLocal(keyX + 8 + keyLineLength + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 12 - keyLineLength, keyFontSize + 2, 4, true);
-			wCol = '#ffffff';
-		}*/
 			context.fillStyle = wCol;
 			context.font = keyFont;
 			context.fillText(entry.fullName, keyX + midScreenPos[0] + 8 + keyLineLength + spaceX * itY, keyY + midScreenPos[1] + itX * keyFontSize + 4);
@@ -116,8 +97,6 @@ function drawKey(){
 
 			itX++;
 		}
-		numP++;
-		
 	});
 	craftModels.forEach(function(entry) {
 	
@@ -135,16 +114,6 @@ function drawKey(){
 		
 			var wCol = entry.color;
 			drawColor = entry.color;
-		/*if(containsMouse(keyX + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX, keyFontSize)){
-			roundedRectLocal(keyX + 2 + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 6, keyFontSize + 2, 4, true);
-			wCol = '#ffffff';
-			drawColor = '#ffffff';
-		}
-		if (entry.selected){
-			roundedRectLocal(keyX + 8 + keyLineLength + spaceX * itY, keyY + (itX - 1) * keyFontSize + 4, spaceX - 12 - keyLineLength, keyFontSize + 2, 4, true);
-			wCol = '#ffffff';
-		}*/
-
 			lineWidth = entry.lineWidth;
 			drawLineLocal(keyX + 4 + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2, keyX + 4 + keyLineLength + spaceX * itY, keyY + itX * keyFontSize + 4 - keyFontSize/2);
 			context.fillStyle = wCol;
@@ -153,7 +122,9 @@ function drawKey(){
 			itX++;
 		}
 	});
-}
+	context.fillStyle = '#000000';
+	context.fillText("Key", keyX + midScreenPos[0], keyY + midScreenPos[1] - (keyFontSize/2));
+}/* TEXT WRAPPING CODE END*/
 
 function dragKey(){
 	if(keySelected){
@@ -176,6 +147,16 @@ function dragKey(){
 	if (selectedBorders[3]){
 		keyHeight = -keyY + locateMouseY() - midScreenPos[1];
 	}
+	
+	if (keySelected || selectedBorders[0] || selectedBorders[1] || selectedBorders[2] || selectedBorders[3]){
+		var p = [keyX, keyY];
+		snap(p);
+		keyX = p[0]; keyY = p[1];
+		
+		p = [keyWidth, keyHeight];
+		snap(p);
+		keyWidth = p[0]; keyHeight = p[1];
+	}
 }
 
 function selectKey(){
@@ -187,15 +168,19 @@ function selectKey(){
 	}
 	if(containsMouse(keyX - keyBorderWidth, keyY - keyBorderWidth, keyBorderWidth * 2, keyHeight + keyBorderWidth)){
 		selectedBorders[0] = true;
+		keySelected = false;
 	}
 	if(containsMouse(keyX - keyBorderWidth, keyY - keyBorderWidth, keyWidth + keyBorderWidth, keyBorderWidth * 2)){
 		selectedBorders[1] = true;
+		keySelected = false;
 	}
 	if(containsMouse(keyX + keyWidth - keyBorderWidth, keyY - keyBorderWidth, keyBorderWidth * 2, keyHeight + keyBorderWidth)){
 		selectedBorders[2] = true;
+		keySelected = false;
 	}
 	if(containsMouse(keyX - keyBorderWidth, keyY + keyHeight - keyBorderWidth, keyWidth + keyBorderWidth, keyBorderWidth * 2)){
 		selectedBorders[3] = true;
+		keySelected = false;
 	}
 }
 

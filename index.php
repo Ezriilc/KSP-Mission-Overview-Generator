@@ -11,7 +11,7 @@
     <meta charset="utf-8" />
     <meta name="msapplication-config" content="none"/>
     <meta name="description" content="Mission Profile Notation Generator"/>
-    <meta name="author" content="Thunderous Echo"/>
+	<meta name="author" content="Thunderous Echo"/>
     <meta name="keywords" content="php, web page, example"/>
 	
 	<script type="text/javascript" src="MPN.js"></script>
@@ -59,6 +59,12 @@
 		style= "border:1px solid #6c823d; 
 		text-align: center; margin-top: 5px"
 		></canvas>
+		<img src="icon/arrow-down.png" id = "arrow-down" style=" display:none">
+		<img src="icon/arrow-up.png" id = "arrow-up" style=" display:none">
+		<img src="icon/arrow-left.png" id = "arrow-left" style=" display:none">
+		<img src="icon/arrow-right.png" id = "arrow-right" style=" display:none">
+		<img src="icon/arrow-cw.png" id = "arrow-cw" style=" display:none">
+		<img src="icon/arrow-ccw.png" id = "arrow-ccw" style="display:none">
 	</div>
 		<div id = "windowButtons" style= "text-align: center; display: table; margin: auto">
 			<section style= "text-align: left; display: table-cell">
@@ -67,17 +73,21 @@
 				<p></p><input type = "checkbox" id="craftEditShow" value = "Craft Models" onclick = "setWindow(5)"> Craft Models
 				<p></p><input type = "checkbox" id="planetEditShow" value = "Planets" onclick = "setWindow(1)"> Planets
 				<p></p><input type = "checkbox" id="craftEditShow" value = "Planet Models" onclick = "setWindow(6)"> Planet Models
-				<p></p><input type = "checkbox" id="trajectoryEditShow" value = "Edit Trajectories" onclick = "setWindow(3)"> Trajectories
+				<!--<p></p><input type = "checkbox" id="trajectoryEditShow" value = "Edit Trajectories" onclick = "setWindow(3)"> Trajectories-->
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>View</h1>
 				Size:  <input id="width" type = "text" size = "4" onchange = "changeWidth(this)" value = "1000"></input> x <input id="height" type = "text" size = "4" onchange = "changeHeight(this)" value="500"></input>
+				<p></p>Gridlines: <input id="gridlines" type = "checkbox" checked></input>
+				<!--<p></p>Craft points: <input id="craftPoints" type = "checkbox"></input>-->
 			</section>
 			<section style= "text-align: right; display: table-cell">
 				<h1 style = "text-align: left">Snap</h1>
-				<p></p>Horizontal:  <input id="horizontalSnap" type = "text" size = "3" value = "0"></input>
-				<p></p>Vertical:  <input id="verticalSnap" type = "text" size = "3" value="0"></input>
-				<p></p>Radial: 	<input id="radialSnap" type = "text" size = "3" value="0"></input>
+				<p></p>Horizontal:  <input id="horizontalSnap" type = "text" size = "3" value = "32"></input>
+				<p></p>Vertical:  <input id="verticalSnap" type = "text" size = "3" value="32"></input>
+				<p></p>Radial: 	<input id="radialSnap" type = "text" size = "3" value="12"></input>
+				<p></p>Angular: 	<input id="angleSnap" type = "text" size = "3" value="8"></input>
+				<p></p>Connecting: 	<input id="connectSnap" type = "text" size = "3" value="16"></input>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Help</h1>
@@ -89,6 +99,10 @@
 				<p></p><input id = "showCraftModelList" type = "checkbox" checked = "true" onclick = "setPopout(0)"> Craft Models
 				<p></p><input id = "showPlanetModelList" type = "checkbox" checked = "true" onclick = "setPopout(1)"> Planet Models
 			</section>
+			<section style= "text-align: left; display: table-cell" id="warningSection">
+				<h1>Errors</h1>
+				<ul id = "warnings" style = "fill-color: #ffffff; width: 200px"></ul>
+			</section>
 		</div>
 		<section style= "text-align: center; display: block" id = "craftEdit">
 			<h5 id = "selCraft">Select a craft to edit</h5>
@@ -99,6 +113,33 @@
 				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false" align = "text-align: center"></input>
 				<p id="label4">Model:
 				<button id="label5" onclick = "setCraftModelToCurrent()">Change to selected model: "Untitled Space Craft"</button></p>
+				
+				<p id="label8">Parent Planet:
+				<button id="label9" onclick = "setCraftPlanetToCurrent(true)">Change to selected planet: "Untitled Planet"</button>
+				<button onclick = "setCraftPlanetToCurrent(false)">Clear</button></p>
+				
+				<p></p>Type: <select id="typeSel" onchange="setCraftType(this)">
+					<option value = "t0">Transfer</option>
+					<option value = "t1">Landing</option>
+					<option value = "t2">Ascent</option>
+					<option value = "t3">Orbit</option>
+					<option value = "t4">Flyby</option>
+				</select>
+				<p></p>Arrows: <select id="arrSel" onchange="setCraftArrows(this)">
+					<option value = "a0">Vague</option>
+					<option value = "a1">Unidirectional</option>
+					<option value = "a2">Bidirectional</option>
+					<option value = "a3">Reverse</option>
+				</select>
+				<!--<section style = "text-align: center; background-color: #ffffff">-->
+				<!--<h4 style = "margin-top: 5px" >Add Next Manuever:</h4>-->
+				<p></p>Add Next Manuever:
+				<button style = "width: 128px">Transfer (T)</button>
+				<button style = "width: 128px">Landing (L)</button>
+				<button style = "width: 128px">Ascent (A)</button>
+				<button style = "width: 128px">Orbit (O)</button>
+				<button style = "width: 128px">Flyby (F)</button>
+				<!--</section>-->
 			</div>
 		</section>
 		<section style= "text-align: center; display: block" id = "craftModelEdit">
@@ -141,20 +182,17 @@
 					Hierarchical Index:   <input id="ind" type = "text" size = "2" onchange = "ind(this)"></input>
 				</div>
 			</section>
-			<section style = "text-align: center; display: block" id = "trajectoryEdit">
-				<h1>Trajectory Customizer</h1>
-				<input type = "button" value = "There will be a bunch of these (7-ish)"></input>
-				<p></p>
-				<input type = "text" value = "And a few of these (2-ish)" size = "32"></input>
-				<p></p>
-				<section style = "display: inline-block">
-					<input type = "button" style = "margin-left: 14px" value = "/\">
-					<p></p>
-					<input type = "button" value = "<"> <input type = "button" value = ">">
-					<p></p>
-					<input type = "button" style = "margin-left: 14px" value = "\/">
-				</section>
-			</section>
+			<!--<section style = "text-align: center; display: block" id = "trajectoryEdit">
+				<h5 id = "selCraft3">Select a craft to edit its trajectory</h5>
+				<div id= "craft3">
+					<h1>Trajectory Customizer</h1>
+					<section style = "display: inline-block">
+						<input type = "button" style = "font-size: x-large; width:64px" value = "↔" ></input>
+						<input type = "button" style = "font-size: x-large; width:64px" value = "↕"></input>
+						<input type = "button" style = "font-size: x-large; width:64px" value = ")"></input>
+					</section>
+				</div>
+			</section>-->
 			<!--<section style= "text-align: left; display: inline-block">
 				<h1>Add Decals</h1>
 					<section style= "display: inline-block">
@@ -182,7 +220,9 @@
 				<p></p>
 				<h2>Crafts and Planets</h2>
 					<h4>Crafts</h4>
+					<p>One "Craft" is one part of the path a represented spacecraft takes (transfer, landing, orbit).</p>
 					<h4>Planets</h4>
+					<p>One "Planet" is one instance of a planet that appears in the Overview and interacts with crafts.</p>
 					<h4>Editing Sections</h4>
 						<p>To open this section, select a craft or planet by clicking on it or by clicking on its instance number in the "Craft Models" or "Planet Models" lists under its model, then click "Crafts" or "Planets" under "Edit".</p>
 						<ul>
@@ -209,17 +249,24 @@
 							<p>Hierarchical indexes are part of a model, and can be edited through "Show Model Options" in a planet's editing section.</p>
 							<p>If you set a hierarchical index to -4, that planet will be represented as 16 times larger than Sun-Kerbol. Please edit responsibly.</p>
 			<h2>Key</h2>
-				<p>The Key is the black rounded rectangle on the viewing canvas. This will appear in the final Overview. The Key shows which crafts and planets are which.</p>
+				<p>The Key is the black rounded rectangle on the viewing canvas listing active models. This will appear in the final Overview. The Key shows which craft models and planet models are which.</p>
 				<p>The Key can be dragged around by dragging it on its center. You can change its size by dragging on the edges and corners.</p>
 				<p>If the Key appears red, it is too small for is contents! Resize it larger!</p>
 			<h2>View</h2>
 				<ul>
-					<li>"Size" allows you to change the dimensions of the final Overview.</li>
+					<li>"Size" allows you to change the dimensions of the final Overview. Values in pixels.</li>
 				</ul>
 			<h2>Snap</h2>
-				<p>All Snap values are in pixels.</p>
+				<ul>
+					<li>"Horizontal" and "Vertical": Transfers and planets snap to this grid, relative to the origin. Values in pixels.</li>
+					<li>"Radial": All other crafts snap at these incremental distances from their parent planet. Values in pixels radius.</li>
+					<li>"Angular": All other crafts snap at these angles from their parent planet. Values in number of snapping angles.</li>
+					<li>"Connecting": How close the end point of one craft and the start point of another must be brought for them to connect. Values in pixels.</li>
+				</ul>
+				<p>Grid-lines are shown when relevant.</p>
 			<h2>Craft Models and Planet Models sidebars</h2>
-				<p>Crafts can be selected from here by clicking
+				<p>Models can be selected from here by clicking on their button.</p>
+				<p>Crafts and Planets can be selected from here by clicking on their instance button under their model.</p>
 				<p>You cannot delete any of the stock planets and must have at least 1 craft model at all times.</p>
 			
 	</section>

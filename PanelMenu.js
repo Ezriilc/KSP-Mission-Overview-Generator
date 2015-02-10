@@ -35,8 +35,7 @@ function updateSelector(){
 			
 	craftModels.forEach(function(entry) {
 		$("#craftSel").append("<section id = 'cmodelsec" + ind + "'><button onclick='currentCraftModel = craftModels[" + ind + "]; craftModelShown = false'><canvas id = 'cmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
-		//$("#craftSel").append("<section id = 'cmodelsec" + ind + "'><button><canvas id = 'cmodel" + ind + "'width = '200px' height = '" + (keyFontSize + 4) + "px'></canvas></button></section>");
-		
+
 		var canvas = document.getElementById("cmodel" + ind);
 		var context = canvas.getContext("2d");
 		context.beginPath();

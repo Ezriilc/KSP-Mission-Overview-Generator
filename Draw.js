@@ -7,6 +7,73 @@ var drawColor = '#ff0000';
 
 var highlightPos = [false, false];
 
+function drawImageLocal(x1, y1, width, height, name){
+	drawImage(x1 + midScreenPos[0], y1 + midScreenPos[1], width, height, name);
+}
+function drawImage(x1, y1, width, height, name){
+	var canvas = document.getElementById("myCanvas");
+	var context = canvas.getContext("2d");
+	var img = document.getElementById(name);
+	context.drawImage(img, x1 - width/2, y1 - height/2, width, height);
+}
+
+function drawGridlines(){
+	if (shouldDrawGridlines && document.getElementById("gridlines").checked){
+		drawColor = "#808080"
+		lineWidth = 1;
+		if(!shouldDrawGridlines.model){//if the varialbe is really a planet
+			var horiz = Number(document.getElementById("horizontalSnap").value);
+			if (horiz > 0){
+				var x = horiz * Math.round(-midScreenPos[0] / horiz);
+				while(x < midScreenPos[0]){
+					drawLineLocal(x, -midScreenPos[1], x, midScreenPos[1]);
+					x+= horiz;
+				}
+			}
+			var vert = Number(document.getElementById("verticalSnap").value);
+			if (vert > 0){
+				var y = vert * Math.round(-midScreenPos[1] / vert);
+				while(y < midScreenPos[1]){
+					drawLineLocal(-midScreenPos[0], y, midScreenPos[0], y);
+					y+= vert;
+				}
+			}
+		}
+		var con = Number(document.getElementById("connectSnap").value);
+		if (con > 0){
+			crafts.forEach(function(entry) {
+				drawCircleLocal(entry.endPosition[0], entry.endPosition[1], con);
+				drawCircleLocal(entry.startPosition[0], entry.startPosition[1], con);
+			});
+		}
+		if(shouldDrawGridlines.model){
+			var maxDist = 2 * Math.sqrt(midScreenPos[0] *  midScreenPos[0] + midScreenPos[1] * midScreenPos[1]);
+			var rad = Number(document.getElementById("radialSnap").value);
+			var ang = Number(document.getElementById("angleSnap").value);
+			entry = shouldDrawGridlines;
+			//planets.forEach(function(entry) {
+				if (rad > 0){
+					var r = 0;
+					while(r < maxDist){
+						drawCircleLocal(entry.position[0], entry.position[1], r);
+						r+= rad;
+					}
+				}
+				
+				if (ang > 0){
+					var a = 0;
+					var angle = Math.PI * 2 / ang;
+					while(a < Math.PI * 2){
+						drawLineLocal(entry.position[0], entry.position[1], entry.position[0]-maxDist*Math.cos(a), entry.position[1]-maxDist*Math.sin(a));
+						a+= angle;
+					}
+				}
+			//});
+		}
+	}
+	shouldDrawGridlines = false;
+}
+
 function drawHighlightLocal(){
 	if (!(highlightPos[0] === false)){
 		lineWidth = 7;
@@ -49,16 +116,13 @@ function drawLineLocal(x1, y1, x2, y2){
 }
 
 function fillCircle(x1, y1, radius){
-
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
 	
-	context.lineWidth = radius;
-	
 	context.beginPath();
-    context.arc(x1, y1, radius / 2, 0, 2 * Math.PI, false);
-	context.strokeStyle = drawColor;
-	context.stroke();
+    context.arc(x1, y1, radius, 0, 2 * Math.PI, false);
+	context.fillStyle = drawColor;
+	context.fill();
 }
 
 function fillCircleLocal(x1, y1, radius){
@@ -82,13 +146,13 @@ function drawCircleLocal(x1, y1, radius){
 	drawCircle(x1 + midScreenPos[0], y1 + midScreenPos[1], radius);
 }
 
-function drawString(){
+function drawString(word, x1, y1){
 	var canvas = document.getElementById("myCanvas");
 	var context = canvas.getContext("2d");
 
-	context.font = '40pt Calibri';
-    context.fillStyle = drawColor;
-	context.fillText("yay", 10, 40);
+	context.font = keyFont;
+    context.fillStyle = '#000000';
+	context.fillText(word, x1, y1);
 }
 
 function fillRect(x1, y1, x2, y2){
