@@ -1,9 +1,3 @@
-//var planetNames = ["Su", "Mo", "Ev", "Gi", "Ke", "Mu", "Mi", "Du", "Ik", "Dr", "Jo", "La", "Ty", "Va", "Po", "Bo", "Ee"];
-//var planetFullNames = ["Sun-Kerbol", "Moho", "Eve", "Gilly", "Kerbin", "Mun", "Minmus", "Duna", "Ike", "Dres", "Jool", "Laythe", "Tylo", "Vall", "Pol", "Bop", "Eeloo"];
-//var planetFillColors = ['#ffe91f', '#a87316', '#7e4185', '#856e41', '#4f81bd', '#8f8e8e', '#92ff8a', '#ab2c2c', '#2e2e2e', '#7a7a7a', '#60cf4a', '#2b9cff', '#d6d6d6', '#9cced6', '#cfab36', '#634734', '#ffffff'];
-//var planetFringeColors = ['#ad9e15', '#5e4617', '#4d2852', '#473b23', '#0056bd', '#5c5b5b', '#62ab5c', '#571616', '#000000', '#404040', '#418c32', '#1e6cb0', '#ababab', '#7ea7ad', '#997e28', '#3b2a1f', '#a8a8a8'];
-/*Bakcup values above: Bop and Pol switched*/
-
 var planetNames = ["Su", "Mo", "Ev", "Gi", "Ke", "Mu", "Mi", "Du", "Ik", "Dr", "Jo", "La", "Ty", "Va", "Bo", "Po", "Ee"];
 var planetFullNames = ["Sun-Kerbol", "Moho", "Eve", "Gilly", "Kerbin", "Mun", "Minmus", "Duna", "Ike", "Dres", "Jool", "Laythe", "Tylo", "Vall", "Bop", "Pol", "Eeloo"];
 var planetFillColors = ['#ffe91f', '#a87316', '#7e4185', '#856e41', '#4f81bd', '#8f8e8e', '#92ff8a', '#ab2c2c', '#2e2e2e', '#7a7a7a', '#60cf4a', '#2b9cff', '#d6d6d6', '#9cced6', '#634734', '#cfab36', '#ffffff'];
@@ -15,7 +9,6 @@ var planetHierarchyIndexes = [0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1]
 var planets = new Array();
 var planetModels = new Array();
 var planetShown = false; //whether the correct planet is shown
-//var planetMoreShown = false;
 var planetModelShown = false;
 
 function PlanetModel(name, fullName, fillColor, fringeColor, hierarchyIndex) {
@@ -112,33 +105,28 @@ function drawPlanets(){
 		if (!planetShown){
 			updateSelector();
 			$("#label1").show();
-			//$("#label0").show();//
 			$("#planet").show();
-			//$("#planet2").show();//
-			//document.getElementById('color0').color.fromString(currentPlanet.model.fringeColor);//
-			//document.getElementById('color1').color.fromString(currentPlanet.model.fillColor);//
-			//document.getElementById('name1').value = currentPlanet.model.fullName;//
-			//document.getElementById('abbr').value = currentPlanet.model.name;//
-			//document.getElementById('ind').value = currentPlanet.model.hierarchyIndex;//
 			document.getElementById("label1").innerHTML = currentPlanet.model.fullName  + " (Instance)";
-			//document.getElementById("label0").innerHTML = currentPlanet.model.fullName  + " (Model)";//
 			$("#selPlanet").hide();
-			$("#selPlanet2").hide();//
+			$("#selPlanet2").hide();
 			planetShown = true;
+			document.getElementById("label6").innerHTML = "Model: " + currentPlanet.model.fullName;
 		}
 	}
 	else{
 		$("#planet").hide();
-		//$("#planet2").hide();//
 		$("#label1").hide();
-		//$("#label0").hide();//
 		$("#selPlanet").show();
-		//$("#selPlanet2").show();//
 		planetShown = false;
 	}
 	
 	if (currentPlanetModel){
-		$("#label6").show();
+		if (currentPlanetModel != currentPlanet.model){
+			$("#label7").show();
+		}
+		else{
+			$("#label7").hide();
+		}
 		if (!planetModelShown){
 			if (planetModels.indexOf(currentPlanetModel) <= 16){
 				document.getElementById("deletePlanetModelButton").style.color = "#808080";
@@ -147,30 +135,23 @@ function drawPlanets(){
 				document.getElementById("deletePlanetModelButton").style.color = "#000000";
 			}
 			updateSelector();
-			//$("#label1").show();
 			$("#label0").show();
-			//$("#planet").show();
 			$("#planet2").show();
 			document.getElementById('color0').color.fromString(currentPlanetModel.fringeColor);
 			document.getElementById('color1').color.fromString(currentPlanetModel.fillColor);
 			document.getElementById('name1').value = currentPlanetModel.fullName;
 			document.getElementById('abbr').value = currentPlanetModel.name;
 			document.getElementById('ind').value = currentPlanetModel.hierarchyIndex;
-			//document.getElementById("label1").innerHTML = currentPlanet.model.fullName  + " (Instance)";
 			document.getElementById("label0").innerHTML = currentPlanetModel.fullName  + " (Model)";
 			document.getElementById("label7").innerHTML = "Change to selected model: '" + currentPlanetModel.fullName + "'";
-			//$("#selPlanet").hide();
 			$("#selPlanet2").hide();
 			planetModelShown = true;
 		}
 	}
 	else{
-		$("#label6").hide();
-		//$("#planet").hide();
+		$("#label7").hide();
 		$("#planet2").hide();
-		//$("#label1").hide();
 		$("#label0").hide();
-		//$("#selPlanet").show();
 		$("#selPlanet2").show();
 		planetModelShown = false;
 	}
@@ -201,28 +182,6 @@ function createPlanetModel(button){
 		Math.round(Math.random() * 3 - 0.5));
 	updateSelector();
 }
-
-/*function planetModelSelector(selector){
-	currentPlanet.name = planetNames[selector.value];
-	currentPlanet.fullName = planetFullNames[selector.value];
-	currentPlanet.fillColor = planetFillColors[selector.value];
-	currentPlanet.fringeColor = planetFringeColors[selector.value];
-	currentPlanet.radius = 32 * Math.pow(2, -planetHierarchyIndexes[selector.value]);
-	currentPlanet.id = selector.value;
-	planetShown = false;
-}*/
-
-/*function planetMoreButton(button){
-	if (planetMoreShown){
-		button.value = "Show Model Options";
-		$("#planetMore").hide();
-	}
-	else{
-		button.value = "Hide Model Options";
-		$("#planetMore").show();
-	}
-	planetMoreShown = !planetMoreShown;
-}*/
 
 function selectPlanets(){
 	planets.forEach(function(entry) {

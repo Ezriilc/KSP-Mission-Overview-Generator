@@ -13,6 +13,7 @@ var shouldDrawGridlines = false;
 $(document).ready(function() {
 
 	setWindow(-1);
+	setPopout(-1);
 	initiatePlanets();
 	initiateCrafts();
 	var m = new CraftModel("Untitled Space Craft", '#000000', 3);
@@ -23,6 +24,7 @@ $(document).ready(function() {
 	var c = new Craft(m);
 	c.parentPlanet = p;
 	c.type = 2;
+	c.arrows = 1;
 	drawAll();
 	updateSelector();
 

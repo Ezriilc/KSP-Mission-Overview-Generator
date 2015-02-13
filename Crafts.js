@@ -29,7 +29,7 @@ function Craft(model) {
 	this.startSelected = false;
 	this.endSelected = false;
 	
-	this.arrows = 1;
+	this.arrows = 0;
 	
 	model.children.push(this);
 	this.childId = model.children.indexOf(this);
@@ -55,6 +55,12 @@ function setCraftType(selector){
 
 function setCraftArrows(selector){
 	currentCraft.arrows = Number($("#arrSel").val().substring(1, 2));
+	if (currentCraft.arrows == 3){
+		selector.style.color = "green";
+	}
+	else{
+		selector.style.color = "black";
+	}
 }
 
 function deleteCraftButton(button){
@@ -119,7 +125,7 @@ function drawFlyby(entry){
 			}
 		}
 		else{
-			$("#warnings").append("<li>Warning: Flyby " + entry.model.name + " does not have a parent planet!</li>");
+			$("#warnings").append("<li>Error: Flyby " + entry.model.name + " does not have a parent planet!</li>");
 		}
 	}
 	if(entry.parentPlanet){
@@ -130,20 +136,24 @@ function drawFlyby(entry){
 		if (a > Math.PI){a-= Math.PI * 2;}
 		if (a < -Math.PI){a+= Math.PI * 2;}
 		
-		if (a >= 0){
-		context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
-			Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]),
-			Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]));
+		if (Math.abs(a) < 0.01){
+			$("#warnings").append("<li>Error: Flyby " + entry.model.name + " should not have the same start and end angles.</li>");
 		}
-		else{
+		else if (Math.abs(a) > Math.PI - 0.01){
 		context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
 			Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]),
 			Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]));
 		}
-		if (startAng == endAng){
-			$("#warnings").append("<li>Flyby " + entry.model.name + " should not have the same entry and exit angles.</li>");
+		else if (a > 0){
+		context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
+			Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]),
+			Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]));
 		}
-		$("#warnings").append("<li>" + a + "</li>");
+		else if (a < 0){
+		context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
+			Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]),
+			Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]));
+		}
 	}
 }
 
@@ -159,7 +169,7 @@ function drawOrbit(entry){
 			}
 		}
 		else{
-			$("#warnings").append("<li>Warning: Orbit " + entry.model.name + " does not have a parent planet!</li>");
+			$("#warnings").append("<li>Error: Orbit " + entry.model.name + " does not have a parent planet!</li>");
 		}
 	}
 	if(entry.parentPlanet){
@@ -176,7 +186,7 @@ function drawAscentLanding(entry){
 			}
 		}
 		else{
-			$("#warnings").append("<li>Warning: Landing " + entry.model.name + " does not have a parent planet!</li>");
+			$("#warnings").append("<li>Error: Landing " + entry.model.name + " does not have a parent planet!</li>");
 		}
 	}
 	if(entry.type == 2){
@@ -187,7 +197,7 @@ function drawAscentLanding(entry){
 			}
 		}
 		else{
-			$("#warnings").append("<li>Warning: Ascent " + entry.model.name + " does not have a parent planet!</li>");
+			$("#warnings").append("<li>Error: Ascent " + entry.model.name + " does not have a parent planet!</li>");
 		}
 	}
 	var canvas = document.getElementById("myCanvas");
@@ -216,7 +226,7 @@ function drawCraft(entry){
 		context.lineWidth = entry.model.lineWidth;
 		context.strokeStyle = entry.model.color;
 
-		//draw line
+		//draw line or arc
 		context.beginPath();
 		chooseDraw(entry);
 		context.strokeStyle = entry.model.color;
@@ -245,37 +255,66 @@ function drawCrafts(){
 	crafts.forEach(function(entry) {
 		drawCraft(entry);
 	});
-	if(currentPlanet.selected){
-		shouldDrawGridlines = true;
+	
+	if (currentCraft){
+		lineWidth = currentCraft.model.lineWidth;
+		drawColor = currentCraft.model.color;
+		drawDiamondLocal(currentCraft.startPosition[0], currentCraft.startPosition[1], currentCraft.radius);
+		drawCircleLocal(currentCraft.endPosition[0], currentCraft.endPosition[1], currentCraft.radius);
 	}
 	if(currentCraft.startSelected || currentCraft.endSelected){
-		if(currentCraft.parentPlanet && currentCraft.type != 0){
-			shouldDrawGridlines = currentCraft.parentPlanet;
-		}
-		else if (currentCraft.type == 0){
-			shouldDrawGridlines = true;
-		}
+		crafts.forEach(function(entry) {
+			if (entry != currentCraft){
+				drawColor = entry.model.color;
+				//var points = getSnappingPoints(entry, currentCraft.startSelected || !canSnap(entry, currentCraft), currentCraft.endSelected || !canSnap(entry, currentCraft));
+				var points = getSnappingPoints(entry, true, true);
+				points.forEach(function(ent) {
+					if(distance(ent[0] + midScreenPos[0], ent[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < Number(document.getElementById("connectSnap").value)){
+						lineWidth = 3;
+					}
+					else{
+						lineWidth = 1;
+					}
+					drawCircleLocal(ent[0], ent[1], Number(document.getElementById("connectSnap").value));
+				});
+			}
+			if((currentCraft.startSelected || currentCraft.endSelected) && canSnap(entry, currentCraft)){
+				lineWidth = entry.model.lineWidth;;
+				drawColor = entry.model.color;
+				drawDiamondLocal(entry.startPosition[0], entry.startPosition[1], entry.radius);
+				drawCircleLocal(entry.endPosition[0], entry.endPosition[1], entry.radius);
+			}
+		});
 	}
-	crafts.forEach(function(entry) {
-		if(currentCraft == entry || shouldDrawGridlines){
-			lineWidth = 1;
-			drawColor = entry.model.color; //drawColor = '#ffffff';
-			drawCircleLocal(entry.startPosition[0], entry.startPosition[1], entry.radius);
-			drawCircleLocal(entry.endPosition[0], entry.endPosition[1], entry.radius);
-		}
-	});
+	
 	if (currentCraft){
 		if (!craftShown){
-		updateSelector();
-		$("#label2").show();
-		$("#craft").show();
-		
-		document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
-		$("#selCraft").hide();
-		craftShown = true;
-		
-		$("#typeSel").val("t" + currentCraft.type);
-		$("#arrSel").val("a" + currentCraft.arrows);
+			updateSelector();
+			
+			$("#label2").show();
+			$("#craft").show();
+			
+			document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
+			$("#selCraft").hide();
+			craftShown = true;
+			
+			$("#typeSel").val("t" + currentCraft.type);
+			
+			$("#arrSel").val("a" + currentCraft.arrows);
+			if (currentCraft.arrows == 3){
+				document.getElementById("arrSel").style.color = "green";
+			}
+			else{
+				document.getElementById("arrSel").style.color = "black";
+			}
+			
+			if (currentCraft.parentPlanet){
+				document.getElementById("label8").innerHTML = "Parent Planet: " + currentCraft.parentPlanet.model.fullName;
+			}
+			else{
+				document.getElementById("label8").innerHTML = "Parent Planet: None";
+			}
+			document.getElementById("label4").innerHTML = "Model: " + currentCraft.model.name;
 		}
 	}
 	else{
@@ -285,7 +324,12 @@ function drawCrafts(){
 		craftShown = false;
 	}
 	if (currentCraftModel){
-		$("#label4").show();
+		if (currentCraftModel != currentCraft.model){
+			$("#label5").show();
+		}
+		else{
+			$("#label5").hide();
+		}
 		if (!craftModelShown){
 			updateSelector();
 			$("#label3").show();
@@ -304,15 +348,20 @@ function drawCrafts(){
 		$("#label3").hide();
 		$("#selCraft2").show();
 		craftModelShown = false;
-		$("#label4").hide();
+		$("#label5").hide();
 	}
 	
 	if (currentPlanet){
-		$("#label8").show();
-		document.getElementById("label9").innerHTML = "Change to selected planet: '" + currentPlanet.model.fullName + "'";
+		if (currentPlanet != currentCraft.parentPlanet){
+			$("#label9").show();
+			document.getElementById("label9").innerHTML = "Change to selected planet: '" + currentPlanet.model.fullName + "'";
+		}
+		else{
+			$("#label9").hide();
+		}
 	}
 	else{
-		$("#label8").hide();
+		$("#label9").hide();
 	}
 }
 
@@ -337,24 +386,40 @@ function createCraftModel(button){
 }
 
 function selectCrafts(){
-	crafts.forEach(function(entry) {
-		if(distance(entry.startPosition[0] + midScreenPos[0], entry.startPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < entry.radius){
-			if (!entry.startSelected){
-				deselectAll();
-				entry.startSelected = true;
-				currentCraft = entry;
-				craftShown = false;
-			}
+	if (currentCraft){
+		if(distance(currentCraft.startPosition[0] + midScreenPos[0], currentCraft.startPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < currentCraft.radius){
+			deselectAll();
+			currentCraft.startSelected = true;
 		}
-		if(distance(entry.endPosition[0] + midScreenPos[0], entry.endPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < entry.radius){
-			if (!entry.endSelected){
-				deselectAll();
-				entry.endSelected = true;
-				currentCraft = entry;
-				craftShown = false;
-			}
+		if(distance(currentCraft.endPosition[0] + midScreenPos[0], currentCraft.endPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < currentCraft.radius){
+			deselectAll();
+			currentCraft.endSelected = true;
 		}
-	});
+	}
+	if (!currentCraft.startSelected && !currentCraft.endSelected){
+		crafts.forEach(function(entry) {
+			var tp = false;
+			var v = 0;
+			var m = [locateMouseX() - midScreenPos[0], locateMouseY() - midScreenPos[1]];
+			if (entry.type < 3){
+				tp = snapPointToLine(m, entry.startPosition, entry.endPosition);
+			}
+			else if (entry.type == 3){
+				tp = snapPointToArc(m, entry.startPosition, entry.endPosition, entry.parentPlanet.position, false);
+			}
+			else{
+				tp = snapPointToArc(m, entry.startPosition, entry.endPosition, entry.parentPlanet.position, true);
+			}
+			if (tp){
+				var d = distance(m[0], m[1], tp[0], tp[1]);
+				if (d < entry.model.lineWidth * 2){
+					deselectAll();
+					currentCraft = entry;
+					craftShown = false;
+				}
+			}
+		});
+	}
 }
 
 function deselectCrafts(){
@@ -376,14 +441,18 @@ function dragCrafts(){
 		if(entry.startSelected){
 			entry.startPosition[0] = locateMouseX() - midScreenPos[0];
 			entry.startPosition[1] = locateMouseY() - midScreenPos[1];
-			if (entry.type == 0){
-				snap(entry.startPosition);
-			}
-			else{
-				radialSnap(entry.startPosition, entry.parentPlanet.position);
-			}
 			snapToAdjacentCrafts(entry, true);
-			if (entry.type == 4 && entry.parentPlanet){
+			detectAdjacentCrafts();
+			snapToCrafts(entry, true);
+			if (entry.prevCraft == false){
+				if (entry.type == 0){
+					snap(entry.startPosition);
+				}
+				else{
+					radialSnap(entry.startPosition, entry.parentPlanet.position, entry.parentPlanet, true);
+				}
+			}
+			if (entry.type == 4 && entry.parentPlanet){//flyby: keep start and end points at same altitude
 				var startDist = distance(entry.startPosition[0], entry.startPosition[1], entry.parentPlanet.position[0], entry.parentPlanet.position[1]);
 				var endDist = distance(entry.endPosition[0], entry.endPosition[1], entry.parentPlanet.position[0], entry.parentPlanet.position[1]);
 				if (endDist <= 0){endDist = 1; entry.endPosition[0] += 1};
@@ -395,14 +464,18 @@ function dragCrafts(){
 		if(entry.endSelected){
 			entry.endPosition[0] = locateMouseX() - midScreenPos[0];
 			entry.endPosition[1] = locateMouseY() - midScreenPos[1];
-			if (entry.type == 0){
-				snap(entry.endPosition);
-			}
-			else{
-				radialSnap(entry.endPosition, entry.parentPlanet.position);
-			}
 			snapToAdjacentCrafts(entry, false);
-			if (entry.type == 4 && entry.parentPlanet){
+			detectAdjacentCrafts();
+			snapToCrafts(entry, false);
+			if (entry.nextCraft == false){
+				if (entry.type == 0){
+					snap(entry.endPosition);
+				}
+				else{
+					radialSnap(entry.endPosition, entry.parentPlanet.position, entry.parentPlanet, true);
+				}
+			}
+			if (entry.type == 4 && entry.parentPlanet){//flyby: keep start and end points at same altitude
 				var startDist = distance(entry.startPosition[0], entry.startPosition[1], entry.parentPlanet.position[0], entry.parentPlanet.position[1]);
 				var endDist = distance(entry.endPosition[0], entry.endPosition[1], entry.parentPlanet.position[0], entry.parentPlanet.position[1]);
 				if (endDist <= 0){endDist = 1;}
@@ -412,46 +485,6 @@ function dragCrafts(){
 			}
 		}
 	});
-}
-
-function radialSnap(pos, parent){
-	var dist = distance(pos[0], pos[1], parent[0], parent[1]);
-	var rot = Math.atan2(-pos[1] + parent[1], -pos[0] + parent[0]);
-	var rad = Number(document.getElementById("radialSnap").value);
-	if (rad > 0){
-		dist = rad * Math.round(dist / rad);
-	}
-	var ang = Math.PI * 2 / Number(document.getElementById("angleSnap").value);
-	if (Number(document.getElementById("angleSnap").value) > 0){
-		rot = ang * Math.round(rot / ang);
-	}
-	pos[0] = parent[0] - dist*Math.cos(rot);
-	pos[1] = parent[1] - dist*Math.sin(rot);
-}
-
-function snapToAdjacentCrafts(c, start){
-	if (start){
-		crafts.forEach(function(entry) {
-			var d = distance(c.startPosition[0], c.startPosition[1], entry.endPosition[0], entry.endPosition[1]);
-			if(canSnap(entry, c) && d < Number(document.getElementById("connectSnap").value) && d > 0){
-				c.startPosition[0] = entry.endPosition[0];
-				c.startPosition[1] = entry.endPosition[1];
-			}
-		});
-	}
-	else{
-		crafts.forEach(function(entry) {
-			var d = distance(c.endPosition[0], c.endPosition[1], entry.startPosition[0], entry.startPosition[1]);
-			if(canSnap(entry, c) && d < Number(document.getElementById("connectSnap").value) && d > 0){
-				c.endPosition[0] = entry.startPosition[0];
-				c.endPosition[1] = entry.startPosition[1];
-			}
-		});
-	}
-}
-
-function canSnap(c1, c2){
-	return c1.model === c2.model && !(c1 === c2) && c1.type != 3 && c2.type != 3;
 }
 
 function detectAdjacentCrafts(){
@@ -464,11 +497,9 @@ function detectAdjacentCrafts(){
 			if (canSnap(entry, entry2) && entry.startPosition[0] == entry2.endPosition[0] && entry.startPosition[1] == entry2.endPosition[1]){
 				if (entry2.nextCraft){
 					$("#warnings").append("<li>Welcome, Schrödinger.</li>");
-					//$("#warnings").append("<li>Warning: "+entry2.model.name+" should not undock from itself.</li>");
 				}
 				if (entry.prevCraft){
 					$("#warnings").append("<li>Welcome, Gersh Budker.</li>");
-					//$("#warnings").append("<li>Warning: "+entry.model.name+" should not dock to itself.</li>");
 				}
 				if (!entry2.nextCraft && !entry.prevCraft){
 					entry.prevCraft = entry2;

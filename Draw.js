@@ -18,10 +18,25 @@ function drawImage(x1, y1, width, height, name){
 }
 
 function drawGridlines(){
+	var parentPlanet = false;
+	if(currentPlanet.selected){
+		shouldDrawGridlines = true;
+	}
+	if(currentCraft.startSelected || currentCraft.endSelected){
+		if(currentCraft.parentPlanet && currentCraft.type != 0){
+			shouldDrawGridlines = true;
+			parentPlanet = currentCraft.parentPlanet;
+		}
+		else if (currentCraft.type == 0){
+			shouldDrawGridlines = true;
+		}
+	}
+	
 	if (shouldDrawGridlines && document.getElementById("gridlines").checked){
 		drawColor = "#808080"
 		lineWidth = 1;
-		if(!shouldDrawGridlines.model){//if the varialbe is really a planet
+		
+		if(!parentPlanet){
 			var horiz = Number(document.getElementById("horizontalSnap").value);
 			if (horiz > 0){
 				var x = horiz * Math.round(-midScreenPos[0] / horiz);
@@ -39,36 +54,35 @@ function drawGridlines(){
 				}
 			}
 		}
-		var con = Number(document.getElementById("connectSnap").value);
-		if (con > 0){
-			crafts.forEach(function(entry) {
-				drawCircleLocal(entry.endPosition[0], entry.endPosition[1], con);
-				drawCircleLocal(entry.startPosition[0], entry.startPosition[1], con);
-			});
-		}
-		if(shouldDrawGridlines.model){
+		
+		/*var con = Number(document.getElementById("connectSnap").value);
+		if (con > 0 && currentCraft){
+			if (currentCraft.type != 3){
+				drawCircleLocal(currentCraft.endPosition[0], currentCraft.endPosition[1], con);
+				drawCircleLocal(currentCraft.startPosition[0], currentCraft.startPosition[1], con);
+			}
+		}*/
+		
+		if(parentPlanet){
 			var maxDist = 2 * Math.sqrt(midScreenPos[0] *  midScreenPos[0] + midScreenPos[1] * midScreenPos[1]);
 			var rad = Number(document.getElementById("radialSnap").value);
 			var ang = Number(document.getElementById("angleSnap").value);
-			entry = shouldDrawGridlines;
-			//planets.forEach(function(entry) {
-				if (rad > 0){
-					var r = 0;
-					while(r < maxDist){
-						drawCircleLocal(entry.position[0], entry.position[1], r);
-						r+= rad;
-					}
+			entry = parentPlanet;
+			if (rad > 0){
+				var r = 0;
+				while(r < maxDist){
+					drawCircleLocal(entry.position[0], entry.position[1], r + parentPlanet.radius);
+					r+= rad;
 				}
-				
-				if (ang > 0){
-					var a = 0;
-					var angle = Math.PI * 2 / ang;
-					while(a < Math.PI * 2){
-						drawLineLocal(entry.position[0], entry.position[1], entry.position[0]-maxDist*Math.cos(a), entry.position[1]-maxDist*Math.sin(a));
-						a+= angle;
-					}
+			}
+			if (ang > 0){
+				var a = 0;
+				var angle = Math.PI * 2 / ang;
+				while(a < Math.PI * 2){
+					drawLineLocal(entry.position[0], entry.position[1], entry.position[0]-maxDist*Math.cos(a), entry.position[1]-maxDist*Math.sin(a));
+					a+= angle;
 				}
-			//});
+			}
 		}
 	}
 	shouldDrawGridlines = false;
@@ -109,6 +123,29 @@ function drawLine(x1, y1, x2, y2){
 	context.beginPath();
     context.arc(x2, y2, context.lineWidth / 2, 0, 2 * Math.PI, false);
 	context.stroke();*/
+}
+
+function drawDiamond(x1, y1, radius){
+	var canvas = document.getElementById("myCanvas");
+	var context = canvas.getContext("2d");
+	
+	context.lineWidth = lineWidth;
+	context.strokeStyle = drawColor;
+	
+	context.beginPath();
+	context.moveTo(x1, y1 + radius);
+    context.lineTo(x1 + radius, y1);
+	context.lineTo(x1, y1 - radius);
+	context.lineTo(x1 - radius, y1);
+	//context.lineTo(x1, y1 + radius);
+	//context.lineTo(x1 + radius, y1);
+	context.closePath();
+	
+	context.stroke();
+}
+
+function drawDiamondLocal(x1, y1, radius){
+	drawDiamond(x1 + midScreenPos[0], y1 + midScreenPos[1], radius);
 }
 
 function drawLineLocal(x1, y1, x2, y2){
