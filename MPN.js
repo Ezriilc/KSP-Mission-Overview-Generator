@@ -2,6 +2,7 @@ var click = false;
 //var mode = true; //linear = false, flowchart = true
 var laneWidth = 64;
 var screenSelected = false;
+var leftClick = true;
 
 var currentPlanet = false;
 var currentCraft = false;
@@ -9,6 +10,11 @@ var currentCraftModel = false;
 var currentPlanetModel = false;
 
 var shouldDrawGridlines = false;
+
+//var keyEnum = {Alt:0};
+//var keyArray = [false];
+
+var alt = false;
 
 $(document).ready(function() {
 
@@ -24,7 +30,7 @@ $(document).ready(function() {
 	var c = new Craft(m);
 	c.parentPlanet = p;
 	c.type = 2;
-	c.arrows = 1;
+	//c.endArrow = true;
 	drawAll();
 	updateSelector();
 
@@ -34,6 +40,7 @@ $(document).ready(function() {
 		updateSelectorSize();
 	}
 	$(document).mousemove(function(event) {
+		alt = event.altKey;
 		if (click){drag();}
 		drawAll();
 	});
@@ -41,16 +48,26 @@ $(document).ready(function() {
 	$(document).mousedown(function(event) {
 		click = true;
 		mousePress();
+		leftClick = detectLeftButton(event);
 	});
 	
 	$(document).mouseup(function(event) {
 		click = false;
 		mouseRelease();
 	});
-	
-	$(document).keypress(function(event) {
+	//$(document).keydown(function(event) {
+	/*document.onkeydown = function(event){  
+		if(event.keyCode == 18){ //alt
+			keyArray[keyEnum.Alt] = true;
+		}
 		drawAll();
-	});
+	}
+	document.onkeyup = function(event){  
+		if(event.keyCode == 18){ //alt
+			keyArray[keyEnum.Alt] = false;
+		}
+		drawAll();
+	}*/
 });
 
 function drawAll(){
@@ -63,8 +80,8 @@ function drawAll(){
 	canvasX = rect.left;
 	canvasY = rect.top;
 		
-	midScreenPos[0] = screenPos[0] + rect.width / 2;
-	midScreenPos[1] = screenPos[1] + rect.height / 2;
+	midScreenPos[0] = screenPos[0] + rect.width / 2 + 0.5;
+	midScreenPos[1] = screenPos[1] + rect.height / 2 + 0.5;
 	drawColor = '#ffffff';
 	fillRect(0, 0, rect.width, rect.height);
 	
@@ -120,3 +137,12 @@ function changeWidth(textbox){
 	drawAll();
 }
 
+function detectLeftButton(event) {
+    if ('buttons' in event) {
+        return event.buttons === 1;
+    } else if ('which' in event) {
+        return event.which === 1;
+    } else {
+        return event.button === 1;
+    }
+}

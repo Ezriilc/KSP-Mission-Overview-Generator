@@ -19,7 +19,10 @@ function drawImage(x1, y1, width, height, name){
 
 function drawGridlines(){
 	var parentPlanet = false;
-	if(currentPlanet.selected){
+	selectedBorders.forEach(function(ent) { //check whether key Borders selected
+		if (ent){shouldDrawGridlines = true;}
+	});
+	if(currentPlanet.selected || keySelected){
 		shouldDrawGridlines = true;
 	}
 	if(currentCraft.startSelected || currentCraft.endSelected){
@@ -54,14 +57,6 @@ function drawGridlines(){
 				}
 			}
 		}
-		
-		/*var con = Number(document.getElementById("connectSnap").value);
-		if (con > 0 && currentCraft){
-			if (currentCraft.type != 3){
-				drawCircleLocal(currentCraft.endPosition[0], currentCraft.endPosition[1], con);
-				drawCircleLocal(currentCraft.startPosition[0], currentCraft.startPosition[1], con);
-			}
-		}*/
 		
 		if(parentPlanet){
 			var maxDist = 2 * Math.sqrt(midScreenPos[0] *  midScreenPos[0] + midScreenPos[1] * midScreenPos[1]);
@@ -131,6 +126,7 @@ function drawDiamond(x1, y1, radius){
 	
 	context.lineWidth = lineWidth;
 	context.strokeStyle = drawColor;
+	context.lineJoin="round";
 	
 	context.beginPath();
 	context.moveTo(x1, y1 + radius);

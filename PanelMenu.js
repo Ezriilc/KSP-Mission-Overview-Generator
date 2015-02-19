@@ -161,6 +161,8 @@ function setWindow(id){
 			$('#instructions').hide();
 			$('#craftModelEdit').hide();
 			$('#planetModelEdit').hide();
+			$('#hotkeys').hide();
+			//$('#rules').hide();
 		break;
 		case 0:
 			if($('#craftEdit').is(':visible')){
@@ -225,6 +227,24 @@ function setWindow(id){
 				$('#windowButtons').after($('#planetModelEdit'));
 			}
 			break;
+		case 7:
+			if($('#hotkeys').is(':visible')){
+				$('#hotkeys').hide();
+			}
+			else{
+				$('#hotkeys').show();
+				//$('#windowButtons').after($('#planetModelEdit'));
+			}
+			break;
+		/*case 8:
+			if($('#rules').is(':visible')){
+				$('#rules').hide();
+			}
+			else{
+				$('#rules').show();
+				//$('#windowButtons').after($('#planetModelEdit'));
+			}
+			break;*/
 	}
 }
 

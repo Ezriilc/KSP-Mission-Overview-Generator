@@ -29,15 +29,23 @@ function Craft(model) {
 	this.startSelected = false;
 	this.endSelected = false;
 	
-	this.arrows = 0;
+	this.startArrow = false;
 	
 	model.children.push(this);
 	this.childId = model.children.indexOf(this);
+	
+	this.prevCraftType = 0; //0: no previous craft exists, 1: linearly attached, 2: inline attached
+	this.nextCraftType = 0; //0: no next craft exists, 1: linearly attached, 2: inline attached
 	
 	this.prevCraft = false;
 	this.nextCraft = false;
 	
 	this.parentPlanet = false;
+	
+	this.ccw = true;
+	this.aerobrake = false;
+	this.destroy = false;
+	this.refuel = false;
 }
 
 function craftRecenterButton(button){
@@ -51,16 +59,7 @@ function initiateCrafts(){
 
 function setCraftType(selector){
 	currentCraft.type = Number($("#typeSel").val().substring(1, 2));
-}
-
-function setCraftArrows(selector){
-	currentCraft.arrows = Number($("#arrSel").val().substring(1, 2));
-	if (currentCraft.arrows == 3){
-		selector.style.color = "green";
-	}
-	else{
-		selector.style.color = "black";
-	}
+	craftShown = false;
 }
 
 function deleteCraftButton(button){
@@ -107,6 +106,7 @@ function drawArrowhead(to, from, headLength){
 	var tox = to[0] + midScreenPos[0]; var toy = to[1] + midScreenPos[1];
 	var fromx = from[0] + midScreenPos[0]; var fromy = from[1] + midScreenPos[1];
 	var angle = Math.atan2(toy-fromy,tox-fromx);
+	context.lineJoin="miter";
 	context.beginPath();
 	context.moveTo(tox-headLength*Math.cos(angle-Math.PI/6),toy-headLength*Math.sin(angle-Math.PI/6));
 	context.lineTo(tox, toy);
@@ -139,20 +139,17 @@ function drawFlyby(entry){
 		if (Math.abs(a) < 0.01){
 			$("#warnings").append("<li>Error: Flyby " + entry.model.name + " should not have the same start and end angles.</li>");
 		}
-		else if (Math.abs(a) > Math.PI - 0.01){
-		context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
-			Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]),
-			Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]));
-		}
-		else if (a > 0){
-		context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
-			Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]),
-			Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]));
-		}
-		else if (a < 0){
-		context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
-			Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]),
-			Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]));
+		else{
+			if(entry.ccw){
+				context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
+				Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]),
+				Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]));
+			}
+			else{
+				context.arc(entry.parentPlanet.position[0] + midScreenPos[0], entry.parentPlanet.position[1] + midScreenPos[1], entry.orbitHeight, 
+				Math.atan2(entry.startPosition[1] - entry.parentPlanet.position[1], entry.startPosition[0] - entry.parentPlanet.position[0]),
+				Math.atan2(entry.endPosition[1] - entry.parentPlanet.position[1], entry.endPosition[0] - entry.parentPlanet.position[0]));
+			}
 		}
 	}
 }
@@ -162,7 +159,6 @@ function drawOrbit(entry){
 	var context = canvas.getContext("2d");
 	if(entry.type == 3){
 		if (entry.parentPlanet){
-		entry.startPosition = entry.parentPlanet.position.slice(0);
 		entry.orbitHeight = distance(entry.endPosition[0], entry.endPosition[1], entry.parentPlanet.position[0], entry.parentPlanet.position[1]);
 			if (planets.indexOf(entry.parentPlanet) == -1){
 				entry.parentPlanet = false;
@@ -180,7 +176,6 @@ function drawOrbit(entry){
 function drawAscentLanding(entry){
 	if(entry.type == 1){
 		if (entry.parentPlanet){
-			entry.endPosition = entry.parentPlanet.position.slice(0);
 			if (planets.indexOf(entry.parentPlanet) == -1){
 				entry.parentPlanet = false;
 			}
@@ -191,7 +186,6 @@ function drawAscentLanding(entry){
 	}
 	if(entry.type == 2){
 		if (entry.parentPlanet){
-		entry.startPosition = entry.parentPlanet.position.slice(0);
 			if (planets.indexOf(entry.parentPlanet) == -1){
 				entry.parentPlanet = false;
 			}
@@ -219,7 +213,7 @@ function chooseDraw(entry){
 }
 
 function drawCraft(entry){
-		detectAdjacentCrafts();
+		//detectAdjacentCrafts();
 	
 		var canvas = document.getElementById("myCanvas");
 		var context = canvas.getContext("2d");
@@ -230,23 +224,74 @@ function drawCraft(entry){
 		context.beginPath();
 		chooseDraw(entry);
 		context.strokeStyle = entry.model.color;
+		context.fillStyle = entry.model.color;
 		context.stroke();
 		
 		//draw arrow or round end
 		drawColor = entry.model.color;
 		if (entry.type < 3){
-			if(entry.arrows == 1 || entry.arrows == 2){
+			if (entry.nextCraftType != 2 && !entry.destroy){ //end arrow
 				drawArrowhead(entry.endPosition, entry.startPosition, entry.model.lineWidth * 4);
 			}
 			else{
-				fillCircleLocal(entry.endPosition[0], entry.endPosition[1], entry.model.lineWidth / 2);
+				fillCircleLocal(entry.endPosition[0], entry.endPosition[1], entry.model.lineWidth / 2);//does not work for even numbers
 			}
-			if(entry.arrows == 3 || entry.arrows == 2){
+			if(entry.startArrow){
 				drawArrowhead(entry.startPosition, entry.endPosition, entry.model.lineWidth * 4);
 			}
 			else{
-				fillCircleLocal(entry.startPosition[0], entry.startPosition[1], entry.model.lineWidth / 2);
+				fillCircleLocal(entry.startPosition[0], entry.startPosition[1], entry.model.lineWidth / 2);//does not work for even numbers
 			}
+		}
+		if (entry.type < 3){
+			//draw refuel icon
+			if (entry.refuel){
+				context.lineJoin="round";
+				context.beginPath();
+				
+				var angle = Math.atan2(entry.startPosition[1]-entry.endPosition[1], entry.startPosition[0]-entry.endPosition[0]);
+				var headLength = entry.model.lineWidth * 7; //to avoid arrows
+				
+				var mid = [entry.startPosition[0] + midScreenPos[0] -headLength*Math.cos(angle), entry.startPosition[1] + midScreenPos[1] -headLength*Math.sin(angle)];
+				
+				
+				context.moveTo(mid[0] - entry.radius, mid[1] - entry.radius);
+				context.lineTo(mid[0] + entry.radius, mid[1] - entry.radius);
+				context.lineTo(mid[0] + entry.radius, mid[1] + entry.radius);
+				context.lineTo(mid[0] - entry.radius, mid[1] + entry.radius);
+				context.closePath();
+				context.stroke();
+				context.fill();
+			}
+			
+			//draw aerobrake icon
+			if (entry.aerobrake){
+				var headLength = entry.model.lineWidth * 7; //to avoid arrows
+				var tox = entry.endPosition[0] + midScreenPos[0]; var toy = entry.endPosition[1] + midScreenPos[1];
+				var fromx = entry.startPosition[0] + midScreenPos[0]; var fromy = entry.startPosition[1] + midScreenPos[1];
+				var angle = Math.atan2(toy-fromy,tox-fromx);
+				context.beginPath();
+				context.moveTo(tox-headLength*Math.cos(angle-Math.PI/5),toy-headLength*Math.sin(angle-Math.PI/5));
+				//context.lineTo(tox, toy);
+				context.lineTo(tox-headLength*Math.cos(angle+Math.PI/5),toy-headLength*Math.sin(angle+Math.PI/5));
+				context.stroke();
+			}
+		}
+		//draw destroy icon
+		if (entry.destroy){
+			var mid = [entry.endPosition[0] + midScreenPos[0], entry.endPosition[1] + midScreenPos[1]];
+			
+			var headLength = entry.model.lineWidth * 3;
+			
+			context.beginPath();
+			context.moveTo(mid[0] - headLength, mid[1] - headLength);
+			context.lineTo(mid[0] + headLength, mid[1] + headLength);
+			context.stroke();
+			
+			context.beginPath();
+			context.moveTo(mid[0] + headLength, mid[1] - headLength);
+			context.lineTo(mid[0] - headLength, mid[1] + headLength);
+			context.stroke();
 		}
 }
 
@@ -262,12 +307,24 @@ function drawCrafts(){
 		drawDiamondLocal(currentCraft.startPosition[0], currentCraft.startPosition[1], currentCraft.radius);
 		drawCircleLocal(currentCraft.endPosition[0], currentCraft.endPosition[1], currentCraft.radius);
 	}
+	
 	if(currentCraft.startSelected || currentCraft.endSelected){
 		crafts.forEach(function(entry) {
+			var e = 0;
+			if (currentCraft.startSelected){e = 1;}
+			if (!canInlineSnap(currentCraft, entry)){e = -1;}
+			if (currentCraft.type == 3){e = 5;}
 			if (entry != currentCraft){
 				drawColor = entry.model.color;
-				//var points = getSnappingPoints(entry, currentCraft.startSelected || !canSnap(entry, currentCraft), currentCraft.endSelected || !canSnap(entry, currentCraft));
-				var points = getSnappingPoints(entry, true, true);
+				
+				var points = false;
+				
+				if (alt || entry.type == 3){
+					points = getSnappingPoints(entry, 2);
+				}
+				else{
+					points = getSnappingPoints(entry, e);
+				}
 				points.forEach(function(ent) {
 					if(distance(ent[0] + midScreenPos[0], ent[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < Number(document.getElementById("connectSnap").value)){
 						lineWidth = 3;
@@ -278,7 +335,7 @@ function drawCrafts(){
 					drawCircleLocal(ent[0], ent[1], Number(document.getElementById("connectSnap").value));
 				});
 			}
-			if((currentCraft.startSelected || currentCraft.endSelected) && canSnap(entry, currentCraft)){
+			if((currentCraft.startSelected || currentCraft.endSelected) && canInlineSnap(entry, currentCraft)){
 				lineWidth = entry.model.lineWidth;;
 				drawColor = entry.model.color;
 				drawDiamondLocal(entry.startPosition[0], entry.startPosition[1], entry.radius);
@@ -300,12 +357,28 @@ function drawCrafts(){
 			
 			$("#typeSel").val("t" + currentCraft.type);
 			
-			$("#arrSel").val("a" + currentCraft.arrows);
-			if (currentCraft.arrows == 3){
-				document.getElementById("arrSel").style.color = "green";
+			document.getElementById("ccwCheckbox").checked = currentCraft.ccw;
+			document.getElementById("aerobrakeCheckbox").checked = currentCraft.aerobrake;
+			document.getElementById("destroyCheckbox").checked = currentCraft.destroy;
+			document.getElementById("refuelCheckbox").checked = currentCraft.refuel;
+			document.getElementById("startCheckbox").checked = currentCraft.startArrow;
+			if (currentCraft.type < 3){
+				$("#aerobrakeIn").show();
+				$("#destroyIn").show();
+				$("#refuelIn").show();
+				$("#startIn").show();
 			}
 			else{
-				document.getElementById("arrSel").style.color = "black";
+				$("#aerobrakeIn").hide();
+				$("#destroyIn").hide();
+				$("#refuelIn").hide();
+				$("#startIn").hide();
+			}
+			if (currentCraft.type == 4){
+				$("#ccwIn").show();
+			}
+			else{
+				$("#ccwIn").hide();
 			}
 			
 			if (currentCraft.parentPlanet){
@@ -372,8 +445,13 @@ function name2(textbox){
 	updateSelector();
 }
 function width2(textbox){
-	if (Number(document.getElementById('width2').value) != NaN 
-	&& Number(document.getElementById('width2').value) > 0){
+	if (Number(document.getElementById('width2').value) != NaN){
+		if ((Number(document.getElementById('width2').value) + 1) % 2 != 0){
+			document.getElementById('width2').value = 2 * Math.round((Number(document.getElementById('width2').value) + 1) / 2) - 1 + "";
+		}
+		if (Number(document.getElementById('width2').value) <= 0){
+			document.getElementById('width2').value = 1 + "";
+		}
 		currentCraftModel.lineWidth = Number(document.getElementById('width2').value);
 	}
 	crafts.forEach(function(entry) {
@@ -426,14 +504,18 @@ function deselectCrafts(){
 	crafts.forEach(function(entry) {
 		entry.startSelected = false;
 		entry.endSelected = false;
-		crafts.forEach(function(entry2) {
-		});
+		if(entry.type == 1){
+			if (entry.parentPlanet){
+				entry.endPosition = entry.parentPlanet.position.slice(0);
+			}
+		}
+		if(entry.type == 2 || entry.type == 3){
+			if (entry.parentPlanet){
+				entry.startPosition = entry.parentPlanet.position.slice(0);
+			}
+		}
 	});
-	
-	crafts.forEach(function(entry) {
-		entry.startSelected = false;
-		entry.endSelected = false;
-	});
+	detectCraftRelationships();
 }
 
 function dragCrafts(){
@@ -441,10 +523,8 @@ function dragCrafts(){
 		if(entry.startSelected){
 			entry.startPosition[0] = locateMouseX() - midScreenPos[0];
 			entry.startPosition[1] = locateMouseY() - midScreenPos[1];
-			snapToAdjacentCrafts(entry, true);
-			detectAdjacentCrafts();
-			snapToCrafts(entry, true);
-			if (entry.prevCraft == false){
+			var snappedToCraft = snapToCrafts(entry, true);
+			if (!snappedToCraft){
 				if (entry.type == 0){
 					snap(entry.startPosition);
 				}
@@ -464,10 +544,8 @@ function dragCrafts(){
 		if(entry.endSelected){
 			entry.endPosition[0] = locateMouseX() - midScreenPos[0];
 			entry.endPosition[1] = locateMouseY() - midScreenPos[1];
-			snapToAdjacentCrafts(entry, false);
-			detectAdjacentCrafts();
-			snapToCrafts(entry, false);
-			if (entry.nextCraft == false){
+			var snappedToCraft = snapToCrafts(entry, false);
+			if (!snappedToCraft){
 				if (entry.type == 0){
 					snap(entry.endPosition);
 				}
@@ -484,28 +562,5 @@ function dragCrafts(){
 				entry.startPosition[1] = entry.parentPlanet.position[1] + ((entry.startPosition[1] - entry.parentPlanet.position[1]) / startDist * endDist);
 			}
 		}
-	});
-}
-
-function detectAdjacentCrafts(){
-	crafts.forEach(function(entry) {
-		entry.prevCraft = false;
-		entry.nextCraft = false;
-	});
-	crafts.forEach(function(entry) {
-		crafts.forEach(function(entry2) {
-			if (canSnap(entry, entry2) && entry.startPosition[0] == entry2.endPosition[0] && entry.startPosition[1] == entry2.endPosition[1]){
-				if (entry2.nextCraft){
-					$("#warnings").append("<li>Welcome, Schrödinger.</li>");
-				}
-				if (entry.prevCraft){
-					$("#warnings").append("<li>Welcome, Gersh Budker.</li>");
-				}
-				if (!entry2.nextCraft && !entry.prevCraft){
-					entry.prevCraft = entry2;
-					entry2.nextCraft = entry;
-				}
-			}
-		});
 	});
 }

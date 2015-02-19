@@ -3,7 +3,7 @@ var planetFullNames = ["Sun-Kerbol", "Moho", "Eve", "Gilly", "Kerbin", "Mun", "M
 var planetFillColors = ['#ffe91f', '#a87316', '#7e4185', '#856e41', '#4f81bd', '#8f8e8e', '#92ff8a', '#ab2c2c', '#2e2e2e', '#7a7a7a', '#60cf4a', '#2b9cff', '#d6d6d6', '#9cced6', '#634734', '#cfab36', '#ffffff'];
 var planetFringeColors = ['#ad9e15', '#5e4617', '#4d2852', '#473b23', '#0056bd', '#5c5b5b', '#62ab5c', '#571616', '#000000', '#404040', '#418c32', '#1e6cb0', '#ababab', '#7ea7ad', '#3b2a1f', '#997e28', '#a8a8a8'];
 
-var planetHierarchyIndexes = [0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1]; 
+var planetHierarchyIndexes = [0, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1];
 /* Above are preset values for planet mdoels*/
 
 var planets = new Array();

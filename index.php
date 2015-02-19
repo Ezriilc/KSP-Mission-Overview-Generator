@@ -33,7 +33,7 @@
 </head>
 <body>
 	<div class="menu" style="text-align:center; font-size:x-large;">
-		<a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Forum Thread</a>
+		<a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Forum Thread/Rules</a>
 		<a href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator">Source</a>
 		<div style="clear:both;"></div>
 	</div>
@@ -59,12 +59,12 @@
 		style= "border:1px solid #6c823d; 
 		text-align: center; margin-top: 5px"
 		></canvas>
-		<img src="icon/arrow-down.png" id = "arrow-down" style=" display:none">
+		<!--<img src="icon/arrow-down.png" id = "arrow-down" style=" display:none">
 		<img src="icon/arrow-up.png" id = "arrow-up" style=" display:none">
 		<img src="icon/arrow-left.png" id = "arrow-left" style=" display:none">
 		<img src="icon/arrow-right.png" id = "arrow-right" style=" display:none">
 		<img src="icon/arrow-cw.png" id = "arrow-cw" style=" display:none">
-		<img src="icon/arrow-ccw.png" id = "arrow-ccw" style="display:none">
+		<img src="icon/arrow-ccw.png" id = "arrow-ccw" style="display:none">-->
 	</div>
 		<div id = "windowButtons" style= "text-align: center; display: table; margin: auto">
 			<section style= "text-align: left; display: table-cell">
@@ -73,13 +73,11 @@
 				<p></p><input type = "checkbox" id="craftEditShow" value = "Craft Models" onclick = "setWindow(5)"> Craft Models
 				<p></p><input type = "checkbox" id="planetEditShow" value = "Planets" onclick = "setWindow(1)"> Planets
 				<p></p><input type = "checkbox" id="craftEditShow" value = "Planet Models" onclick = "setWindow(6)"> Planet Models
-				<!--<p></p><input type = "checkbox" id="trajectoryEditShow" value = "Edit Trajectories" onclick = "setWindow(3)"> Trajectories-->
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>View</h1>
 				Size:  <input id="width" type = "text" size = "4" onchange = "changeWidth(this)" value = "1000"></input> x <input id="height" type = "text" size = "4" onchange = "changeHeight(this)" value="500"></input>
 				<p></p>Grid-lines: <input id="gridlines" type = "checkbox" checked></input>
-				<!--<p></p>Craft points: <input id="craftPoints" type = "checkbox"></input>-->
 			</section>
 			<section style= "text-align: right; display: table-cell">
 				<h1 style = "text-align: left">Snap</h1>
@@ -93,9 +91,8 @@
 			<section style= "text-align: left; display: table-cell">
 				<h1>Help</h1>
 				<p></p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(4)"> Help
-				<p></p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"> Rules
-				<!--<p></p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(8)"> Hot-keys-->
-				<p></p><a href=" ">Video</a>
+				<p></p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"> Hotkeys
+				<p></p><a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Rules</a>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Model Lists</h1>
@@ -115,28 +112,24 @@
 				<input type = "button" value = "Recenter" onclick="craftRecenterButton(this)" align = "text-align: center"></input>
 				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false" align = "text-align: center"></input>
 				
-				<p></p>Type: <select id="typeSel" onchange="setCraftType(this)">
-					<option value = "t0">Transfer</option>
-					<option value = "t1">Landing</option>
-					<option value = "t2">Ascent</option>
-					<option value = "t3">Orbit</option>
-					<option value = "t4">Flyby</option>
-				</select>
-				<p></p>Arrows: <select id="arrSel" onchange="setCraftArrows(this)">
-					<option value = "a0">Vague</option>
-					<option value = "a1">Unidirectional</option>
-					<option value = "a2">Bidirectional</option>
-					<option value = "a3" style = "color: green">Reverse</option>
-				</select>
-				<section style = "text-align: center; background-color: #ffffff">
-					<h4 style = "margin-bottom: 3px" >Add Next Maneuver:</h4>
-					<button style = "width: 128px">Transfer (T)</button>
-					<button style = "width: 128px">Landing (L)</button>
-					<button style = "width: 128px">Ascent (A)</button>
-					<button style = "width: 128px">Orbit (O)</button>
-					<button style = "width: 128px">Flyby (F)</button>
+				<section style = "background-color: #ffffff; text-align: center">
+					<h3>Appearance</h3>
+					<p>Type: <select id="typeSel" onchange="setCraftType(this)">
+						<option value = "t0">Transfer</option>
+						<option value = "t1">Landing</option>
+						<option value = "t2">Ascent</option>
+						<option value = "t3">Orbit</option>
+						<option value = "t4">Flyby</option>
+					</select></p>
+					<div style = "text-align: left">
+						<p id = "ccwIn"><input id = "ccwCheckbox" type = "checkbox" onclick = "currentCraft.ccw = !currentCraft.ccw" checked></input>Counter-clockwise</p>
+						<p id = "aerobrakeIn"><input id = "aerobrakeCheckbox" type = "checkbox" onclick = "currentCraft.aerobrake = !currentCraft.aerobrake"></input>Aerobraking</p>
+						<p id = "destroyIn"><input id = "destroyCheckbox" type = "checkbox" onclick = "currentCraft.destroy = !currentCraft.destroy"></input>Destroy</p>
+						<p id = "refuelIn"><input id = "refuelCheckbox" type = "checkbox" onclick = "currentCraft.refuel = !currentCraft.refuel"></input>Refuelling</p>
+						<p id = "startIn"><input id = "startCheckbox" type = "checkbox" onclick = "currentCraft.startArrow = !currentCraft.startArrow"></input>There-and-Back</p>
+						<!--<p><button>▲</button><button>▼</button> Chronological label <canvas id = "chronologicalIndexPreview" width = "12" height = "12"></canvas></p>-->
+					</div>
 				</section>
-				
 				<p></p>
 				<section style = "display: inline-block; background-color: #ffffff">
 					<p id="label4" style = "display: inline-block">Model:</p>
@@ -155,7 +148,7 @@
 			<div id= "craft2">
 				<h1 id="label3">Untitled Space Craft</h1>
 				<input id = "deleteCraftModelButton" type = "button" value = "Delete" onclick="deleteCraftModelButton(this)" align = "text-align: center"></input>
-				<input type = "button" value = "Deselect" onclick="a" align = "text-align: center"></input>
+				<input type = "button" value = "Deselect" onclick="currentCraftModel = false; updateSelector();" align = "text-align: center"></input>
 				<p>Name:   <input id="name2" type = "text" onchange = "name2(this)"></input></p>
 				<p>Color:   <input id="color2" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerClosable:true,onImmediateChange:'updateColor(this, 2);'}"></p>
 				<p>Line Width:   <input id="width2" type = "text" size = "2" onchange = "width2(this)"></input></p>
@@ -168,7 +161,7 @@
 					<input type = "button" value = "Delete" onclick="deletePlanetButton(this)" align = "text-align: center"></input>
 					<input type = "button" value = "Recenter" onclick="planetRecenterButton(this)" align = "text-align: center"></input>
 					<input type = "button" value = "Deselect" onclick="currentPlanet = false; planetShown = false" align = "text-align: center"></input>
-					
+					<p></p>
 					<section style = "display: inline-block; background-color: #ffffff">
 						<p id="label6" style = "display: inline-block">Model:</p>
 						<button id="label7" onclick = "setPlanetModelToCurrent()" style = "display: inline-block">Change to selected model: "Untitled Planet"</button>
@@ -180,7 +173,7 @@
 				<h1 id="label0">Untitled Planet</h1>
 				<div id= "planet2" align = "text-align: right">
 					<input id = "deletePlanetModelButton" type = "button" value = "Delete" onclick="deletePlanetModelButton(this)" align = "text-align: center"></input>
-					<input type = "button" value = "Deselect" onclick="a" align = "text-align: center"></input>
+					<input type = "button" value = "Deselect" onclick="currentPlanetModel = false; updateSelector();" align = "text-align: center"></input>
 					<p></p>
 					Name:   <input id="name1" type = "text" onchange = "name1(this)"></input>
 					<p></p>
@@ -193,43 +186,50 @@
 					Hierarchial Index:   <input id="ind" type = "text" size = "2" onchange = "ind(this)"></input>
 				</div>
 			</section>
+		<section style= "text-align: left; display: block; background-color: #ffffff" id = "hotkeys" >
+			<h1>Hotkeys</h2>
+				<ul>
+					<li>Force Undocking/Docking: Hold <strong>Alt</strong> while dragging a craft's start or end point. This will snap it along a craft's line instead of its start or end point as normally done with crafts of two different models. This is only necessary when docking a craft to a craft of the same model.</li>
+				</ul>
+		</section>
 		<section style= "text-align: left; display: block; background-color: #ffffff" id = "instructions" >
 			<h1>Help</h1>
-				<p></p>
 				<h2>Crafts and Planets</h2>
 					<h4>Crafts</h4>
-					<p>One "Craft" is one part of the path a represented spacecraft takes and that appears in the Overview.</p>
+					<p>One "Craft" is one part of the path a represented vessel (or instance of a represented vessel) takes and that appears in the Overview. Asteroids are sometimes crafts.</p>
 					<ul>
 						<li>A "Transfer" represents an or part of an interstellar, interplanetary or 'intermoonar' transfer. This is the only type of maneuver that snaps to the global grid and does not require a parent planet. You can chain these to avoid obstacles.</li>
 						<li>A "Landing" represents a landing/descent onto a celestial body. These automatically snap their ending point to their parent planet.</li>
 						<li>An "Ascent" represents an ascent from a celestial body. These automatically snap their starting point to their parent planet.</li>
-						<li>An "Orbit" represents a notable time at which a craft was in orbit around a celestial body. Other crafts connect to these along their circumference, not at the beginning and ending points.</li>
+						<li>An "Orbit" represents a notable time at which a craft was in orbit around a celestial body. Other crafts always connect to these along their circumference, never at the start and end points.</li>
 						<li>A "Flyby" represents a flyby/gravity assist from a celestial body, or a close encounter with an asteroid.</li>
 					</ul>
 					<p>Start points are shown as diamonds and end points are shown as circles.</p>
 					<h4>Planets</h4>
-					<p>One "Planet" is one instance of a planet that appears in the Overview and interacts with crafts. A "Planet" represents one celestial body (star, planet, moon, or sometimes asteroid)</p>
+					<p>One "Planet" is one instance of a planet that appears in the Overview and interacts with crafts. A "Planet" represents one celestial body (anything with an SOI and gravity, plus sometimes asteroids).</p>
 					<h4>Craft and Planet Editing Sections</h4>
 						<p>To open this section, select a craft or planet by clicking on it or by clicking on its instance number in the "Craft Models" or "Planet Models" lists under its model, then click "Crafts" or "Planets" under "Edit".</p>
 						<ul>
-							<li>"Delete" deletes this craft or planet</li>
-							<li>"Recenter" moves this planet to the center of the screen.</li>
-							<li>"Deselect" deselects this craft or planet. </li>
+							<li>"Delete" deletes this craft or planet.</li>
+							<li>"Recenter" moves this craft planet to the center of the screen.</li>
+							<li>"Deselect" deselects this craft or planet.</li>
 							<li>"Type"(Crafts) changes the type of maneuver this craft is.</li>
 							<li>"Arrows"(Crafts) changes the location and number of arrows this craft displays.</li>
 							<li>"Add Next Maneuver"(Crafts) appends another craft of the clicked type to the end of this one.</li>
-							<li>"Model" is the model this craft or planet uses. </li>
+							<li>"Model" is the model this craft or planet uses.</li>
 								<ul>
 									<li>"Change to selected model" changes the model this craft or planet uses to the currently selected model. Select models through the "Craft Models" or "Planet Models" list. This button is only available when the craft or planet's model is not the selected craft or planet model.</p>
 								</ul>
-							<li>"Parent Planet"(Crafts) is the parent planet this craft uses. </li>
+							<li>"Parent Planet"(Crafts) is the parent planet this craft uses.</li>
 								<ul>
 									<li>"Change to selected planet"(Crafts) changes this craft's parent planet to the currently selected planet. Select a planet by clicking on it or by clicking on its instance number in the "Planet Models" list under its model. This button is only available when the craft's parent planet is not the selected planet.</p>
 									<li>"Clear"(Crafts) clears this craft's parent planet. Note that if this craft is not a transfer, this will result in an error and must be resolved.</p>
 								</ul>
 						</ul>
 				<h2>Models</h2>
-					<p>Each craft or planet on the screen derives its appearance and name from a model. Because all Kerbins use the same model, all Kerbins will look the same. Likewise, all copies of the same spacecraft will look the same. Models appear in the key if they are in use.</p>
+					<p>Each craft or planet on the screen derives its appearance and name from a model. Because all Kerbins use the same model, all Kerbins will look the same. Likewise, all copies of the same craft will look the same. Models appear in the key if they are in use.</p>
+					<p>One "Craft Model" is one craft. If you launch two "Kerbal X"s, they can be represented by the same model(See Hotkeys). Asteroids are sometimes crafts.</p>
+					<p>One "Planet Model" is one celestial body (anything with an SOI and gravity, plus sometimes asteroids).</p>
 					<p>To create a craft or planet that uses a certain model, click the "+" in the "Craft Models" or "Planet Models" list under the model you want to add an instance of. You can change the model that an existing craft or planet uses through its editing section.</p>
 					<h4>Model Editing Sections</h4>
 						<p>To open this section, select a craft model or planet model by clicking on it in the "Craft Models" or "Planet Models" lists, then click "Craft Models" or "Planet Models" under "Edit".</p>
@@ -239,7 +239,7 @@
 							<li>"Name" is the name of a model (that will appear in the Key). </li>
 							<li>"Abbreviation" (Planets) is the abbreviation that will appear on decals labelling planets that use this model. </li>
 							<li>"Outline Color"(Planets), "Fill Color"(Planets), and "Color" (Crafts) are the colors that appear on crafts or planets that use this model. </li>
-							<li>"Line Width" (Crafts) is the line width used to draw the paths of crafts that use this model.</li>
+							<li>"Line Width" (Crafts) is the line width used to draw the paths of crafts that use this model. Must be an odd, positive integer.</li>
 							<li>"Hierarchial Index" (Planets) is the hierarchial index of this model. See below.</li>
 						</ul>
 						<h5>Hierarchical Index</h5>
@@ -248,7 +248,7 @@
 							<p>Hierarchical indexes are part of a model, and can be edited through "Show Model Options" in a planet's editing section.</p>
 							<p>If you set a hierarchical index to -4, that planet will be represented as 16 times larger than Sun-Kerbol. Please edit responsibly.</p>
 			<h2>Key</h2>
-				<p>The Key is the black rounded rectangle on the viewing canvas listing active models. This will appear in the final Overview. The Key shows which craft models and planet models are which.</p>
+				<p>The Key is the black rounded rectangle on the viewing canvas (preview section) listing active models. This will appear in the final Overview. The Key shows which craft models and planet models are which.</p>
 				<p>The Key can be dragged around by dragging it on its center. You can change its size by dragging on the edges and corners.</p>
 				<p>If the Key appears red, it is too small for is contents! Resize it larger!</p>
 			<h2>View</h2>
@@ -260,15 +260,24 @@
 				<ul>
 					<li>"Horizontal" and "Vertical": Transfers and planets snap to this grid, relative to the origin. Values in pixels.</li>
 					<li>"Radial": All crafts except transfers snap at these incremental distances from their parent planet's <strong>surface</strong>. Values in pixels radius.</li>
-					<li>"Linear": Increments along a transfer, ascent, or descent that other crafts snap to. Values in number of snapping points.</li>
-					<li>"Angular": Angles along an orbit or flyby that other crafts snap to. Also, All crafts except transfers snap at these angles from their parent planet. Values in number of snapping angles.</li>
+					<li>"Linear": Increments along a transfer, ascent, or descent that other crafts snap to when docking or undocking. Values in number of incremental divisions.</li>
+					<li>"Angular": Angles along an orbit or flyby(when docking or undocking) that other crafts snap to. Also, all crafts except transfers snap at these angles from their parent planet. Values in number of snapping angles.</li>
 					<li>"Connecting": How close the end point of one craft and the start point of another must be brought for them to connect. Values in pixels.</li>
+					<p>Set any of these to zero to disable them.</p>
 				</ul>
 				<p>Grid-lines are shown when relevant if grid-lines are enabled. Enable grid-lines through "Grid-lines" in the view window.</p>
 			<h2>Craft Models and Planet Models sidebars</h2>
 				<p>Models can be selected from here by clicking on their button.</p>
-				<p>Crafts and Planets can be selected from here by clicking on their instance button under their model.</p>	
+				<p>Crafts and Planets can be selected from here by clicking on their instance button under their model.</p>
+			<h2>Exporting the Overview</h2>
+				<p>There is currently no "Export As" button around. You'll have to:</p>
+				<ol>
+					<li>Deselect all crafts. (Otherwise, the start and end points will show up in the final Overview.)</li>
+					<li>Right click on the canvas (preview section) and select "Save image as...".</li>
+				</ol>
+				<p>If your browser cannot save directly from the canvas, <input value = "click here" type = "button" onclick = "var canvas = document.getElementById('myCanvas'); var dataURL = canvas.toDataURL(); document.getElementById('canvasImg').src = dataURL;"></input> to generate an "img" that you should be able to save.</p>
+				<img id="canvasImg"></img>
 	</section>
-	<p>MOG</p>
+	<p>Mission Overview Generator release 1.0</p>
 </body>
 </html>
