@@ -1,19 +1,21 @@
-<?php
-    $content = 'Some fancy, PHP magic here.';
-?>
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script type="text/javascript" src="jscolor/jscolor.js"></script>
-	
+    <title>MPN Generator</title>
     <meta charset="utf-8" />
-    <meta name="msapplication-config" content="none"/>
     <meta name="description" content="Mission Profile Notation Generator"/>
 	<meta name="author" content="Thunderous Echo"/>
-    <meta name="keywords" content="php, web page, example"/>
+    <meta name="keywords" content=""/>
+    <meta name="msapplication-config" content="none"/>
 	
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="base.css"/>
+    <link rel="stylesheet" type="text/css" href="custom.css"/>
+	<link rel="stylesheet" type="text/css" href="sectionFill.css"/>
+	
+	<script src="jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="jscolor/jscolor.js"></script>
 	<script type="text/javascript" src="MPN.js"></script>
 	<script type="text/javascript" src="Draw.js"></script>
 	<script type="text/javascript" src="LocateMouse.js"></script>
@@ -24,16 +26,10 @@
 	<script type="text/javascript" src="ColorSelector.js"></script>
 	<script type="text/javascript" src="Snap.js"></script>
 	
-    <title>MPN Generator</title>
-    <link rel="shortcut icon" href="favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="base.css"/>
-    <link rel="stylesheet" type="text/css" href="custom.css"/>
-	<link rel="stylesheet" type="text/css" href="sectionFill.css"/>
-	
 </head>
 <body>
 	<div class="menu" style="text-align:center; font-size:x-large;">
-		<a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Forum Thread/Rules</a>
+		<a href="http://forum.kerbalspaceprogram.com/threads/102508">Forum Thread/Rules</a>
 		<a href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator">Source</a>
 		<div style="clear:both;"></div>
 	</div>
@@ -92,7 +88,7 @@
 				<h1>Help</h1>
 				<p></p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(4)"> Help
 				<p></p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"> Hotkeys
-				<p></p><a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Rules</a>
+				<p></p><a href="http://forum.kerbalspaceprogram.com/threads/102508">Rules</a>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Model Lists</h1>
