@@ -29,7 +29,7 @@
 </head>
 <body>
 	<div class="menu" style="text-align:center; font-size:x-large;">
-		<a href="http://forum.kerbalspaceprogram.com/threads/102508">Forum Thread/Rules</a>
+		<a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Forum Thread/Rules</a>
 		<a href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator">Source</a>
 		<div style="clear:both;"></div>
 	</div>
@@ -65,35 +65,35 @@
 		<div id = "windowButtons" style= "text-align: center; display: table; margin: auto">
 			<section style= "text-align: left; display: table-cell">
 				<h1>Edit</h1>
-				<p></p><input type = "checkbox" id="craftEditShow" value = "Crafts" onclick = "setWindow(0)"> Crafts
-				<p></p><input type = "checkbox" id="craftEditShow" value = "Craft Models" onclick = "setWindow(5)"> Craft Models
-				<p></p><input type = "checkbox" id="planetEditShow" value = "Planets" onclick = "setWindow(1)"> Planets
-				<p></p><input type = "checkbox" id="craftEditShow" value = "Planet Models" onclick = "setWindow(6)"> Planet Models
+				<p><input type = "checkbox" id="craftEditShow" value = "Crafts" onclick = "setWindow(0)"/> Crafts</p>
+				<p><input type = "checkbox" id="craftEditShow" value = "Craft Models" onclick = "setWindow(5)"/> Craft Models</p>
+				<p><input type = "checkbox" id="planetEditShow" value = "Planets" onclick = "setWindow(1)"/> Planets</p>
+				<p><input type = "checkbox" id="craftEditShow" value = "Planet Models" onclick = "setWindow(6)"/> Planet Models</p>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>View</h1>
-				Size:  <input id="width" type = "text" size = "4" onchange = "changeWidth(this)" value = "1000"></input> x <input id="height" type = "text" size = "4" onchange = "changeHeight(this)" value="500"></input>
-				<p></p>Grid-lines: <input id="gridlines" type = "checkbox" checked></input>
+				Size:  <input id="width" type = "text" size = "4" onchange = "changeWidth(this)" value = "1000"/> x <input id="height" type = "text" size = "4" onchange = "changeHeight(this)" value="500" />
+				<p>Grid-lines: <input id="gridlines" type = "checkbox" checked/></p>
 			</section>
 			<section style= "text-align: right; display: table-cell">
 				<h1 style = "text-align: left">Snap</h1>
-				<p></p>Horizontal:  <input id="horizontalSnap" type = "text" size = "3" value = "32"></input>
-				<p></p>Vertical:  <input id="verticalSnap" type = "text" size = "3" value="32"></input>
-				<p></p>Radial: 	<input id="radialSnap" type = "text" size = "3" value="8"></input>
-				<p></p>Linear: 	<input id="linearSnap" type = "text" size = "3" value="4"></input>
-				<p></p>Angular: 	<input id="angleSnap" type = "text" size = "3" value="8"></input>
-				<p></p>Connecting: 	<input id="connectSnap" type = "text" size = "3" value="16"></input>
+				<p>Horizontal:  <input id="horizontalSnap" type = "text" size = "3" value = "32"/></p>
+				<p>Vertical:  <input id="verticalSnap" type = "text" size = "3" value="32"/></p>
+				<p>Radial: 	<input id="radialSnap" type = "text" size = "3" value="8"/></p>
+				<p>Linear: 	<input id="linearSnap" type = "text" size = "3" value="4"/></p>
+				<p>Angular: 	<input id="angleSnap" type = "text" size = "3" value="8"/></p>
+				<p>Connecting: 	<input id="connectSnap" type = "text" size = "3" value="16"/></p>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Help</h1>
-				<p></p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(4)"> Help
-				<p></p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"> Hotkeys
-				<p></p><a href="http://forum.kerbalspaceprogram.com/threads/102508">Rules</a>
+				<p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(4)"/> Help</p>
+				<p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"/> Hotkeys</p>
+				<p><a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Rules</a></p>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Model Lists</h1>
-				<p></p><input id = "showCraftModelList" type = "checkbox" onclick = "setPopout(0)"> Craft Models
-				<p></p><input id = "showPlanetModelList" type = "checkbox" onclick = "setPopout(1)"> Planet Models
+				<p><input id = "showCraftModelList" type = "checkbox" onclick = "setPopout(0)"/> Craft Models</p>
+				<p><input id = "showPlanetModelList" type = "checkbox" onclick = "setPopout(1)"/> Planet Models</p>
 			</section>
 			<section style= "text-align: left; display: table-cell" id="warningSection">
 				<h1>Errors</h1>
@@ -104,9 +104,9 @@
 			<h5 id = "selCraft">Select a craft to edit</h5>
 			<div id= "craft">
 				<h1 id="label2">Untitled Space Craft</h1>
-				<input type = "button" value = "Delete" onclick="deleteCraftButton(this)" align = "text-align: center"></input>
-				<input type = "button" value = "Recenter" onclick="craftRecenterButton(this)" align = "text-align: center"></input>
-				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false" align = "text-align: center"></input>
+				<input type = "button" value = "Delete" onclick="deleteCraftButton(this)" align = "text-align: center"/>
+				<input type = "button" value = "Recenter" onclick="craftRecenterButton(this)" align = "text-align: center"/>
+				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false" align = "text-align: center"/>
 				
 				<section style = "background-color: #ffffff; text-align: center">
 					<h3>Appearance</h3>
@@ -131,7 +131,6 @@
 					<p id="label4" style = "display: inline-block">Model:</p>
 					<button id="label5" style = "display: inline-block" onclick = "setCraftModelToCurrent()">Change to selected model: "Untitled Space Craft"</button>
 				</section>
-				
 				<section style = "display: inline-block; background-color: #ffffff">
 					<p id="label8" style = "display: inline-block">Parent Planet:</p>
 					<button id="label9" onclick = "setCraftPlanetToCurrent(true)" style = "display: inline-block">Change to selected planet: "Untitled Planet"</button>
@@ -143,9 +142,9 @@
 			<h5 id = "selCraft2">Select a craft model to edit</h5>
 			<div id= "craft2">
 				<h1 id="label3">Untitled Space Craft</h1>
-				<input id = "deleteCraftModelButton" type = "button" value = "Delete" onclick="deleteCraftModelButton(this)" align = "text-align: center"></input>
-				<input type = "button" value = "Deselect" onclick="currentCraftModel = false; updateSelector();" align = "text-align: center"></input>
-				<p>Name:   <input id="name2" type = "text" onchange = "name2(this)"></input></p>
+				<input id = "deleteCraftModelButton" type = "button" value = "Delete" onclick="deleteCraftModelButton(this)" align = "text-align: center"/>
+				<input type = "button" value = "Deselect" onclick="currentCraftModel = false; updateSelector();" align = "text-align: center"/>
+				<p>Name:   <input id="name2" type = "text" onchange = "name2(this)"/></p>
 				<p>Color:   <input id="color2" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerClosable:true,onImmediateChange:'updateColor(this, 2);'}"></p>
 				<p>Line Width:   <input id="width2" type = "text" size = "2" onchange = "width2(this)"></input></p>
 			</div>
@@ -154,9 +153,9 @@
 				<h5 id = "selPlanet" >Select a planet to edit</h5>
 				<h1 id="label1">Untitled Planet</h1>
 				<div id= "planet" align = "text-align: right">
-					<input type = "button" value = "Delete" onclick="deletePlanetButton(this)" align = "text-align: center"></input>
-					<input type = "button" value = "Recenter" onclick="planetRecenterButton(this)" align = "text-align: center"></input>
-					<input type = "button" value = "Deselect" onclick="currentPlanet = false; planetShown = false" align = "text-align: center"></input>
+					<input type = "button" value = "Delete" onclick="deletePlanetButton(this)" align = "text-align: center"/>
+					<input type = "button" value = "Recenter" onclick="planetRecenterButton(this)" align = "text-align: center"/>
+					<input type = "button" value = "Deselect" onclick="currentPlanet = false; planetShown = false" align = "text-align: center"/>
 					<p></p>
 					<section style = "display: inline-block; background-color: #ffffff">
 						<p id="label6" style = "display: inline-block">Model:</p>
@@ -168,18 +167,13 @@
 				<h5 id = "selPlanet2">Select a planet model to edit</h5>
 				<h1 id="label0">Untitled Planet</h1>
 				<div id= "planet2" align = "text-align: right">
-					<input id = "deletePlanetModelButton" type = "button" value = "Delete" onclick="deletePlanetModelButton(this)" align = "text-align: center"></input>
-					<input type = "button" value = "Deselect" onclick="currentPlanetModel = false; updateSelector();" align = "text-align: center"></input>
-					<p></p>
-					Name:   <input id="name1" type = "text" onchange = "name1(this)"></input>
-					<p></p>
-					Abbreviation:   <input id="abbr" type = "text" size = "2" onchange = "abbr(this)"></input>
-					<p></p>
-					Outline Color:   <input id="color0" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 0);'}">
-					<p></p>
-					Fill Color:   <input id="color1" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 1);'}">
-					<p></p>
-					Hierarchial Index:   <input id="ind" type = "text" size = "2" onchange = "ind(this)"></input>
+					<input id = "deletePlanetModelButton" type = "button" value = "Delete" onclick="deletePlanetModelButton(this)" align = "text-align: center"/>
+					<input type = "button" value = "Deselect" onclick="currentPlanetModel = false; updateSelector();" align = "text-align: center"/>
+					<p>Name:   <input id="name1" type = "text" onchange = "name1(this)"/></p>
+					<p>Abbreviation:   <input id="abbr" type = "text" size = "2" onchange = "abbr(this)"/></p>
+					<p>Outline Color:   <input id="color0" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 0);'}"/></p>
+					<p>Fill Color:   <input id="color1" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 1);'}"/></p>
+					<p>Hierarchial Index:   <input id="ind" type = "text" size = "2" onchange = "ind(this)"/></p>
 				</div>
 			</section>
 		<section style= "text-align: left; display: block; background-color: #ffffff" id = "hotkeys" >

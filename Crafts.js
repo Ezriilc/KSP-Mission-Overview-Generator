@@ -442,7 +442,7 @@ function name2(textbox){
 	currentCraftModel.name = document.getElementById('name2').value;
 	document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
 	craftModelShown = false;
-	updateSelector();
+	//updateSelector();
 }
 function width2(textbox){
 	if (Number(document.getElementById('width2').value) != NaN){
