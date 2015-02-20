@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-    <title>MPN Generator</title>
+    <title>KSP Mission Overview Generator</title>
     <meta charset="utf-8" />
-    <meta name="description" content="Mission Profile Notation Generator"/>
+    <meta name="description" content="A Mission Overview Generator for Kerbal Space Program"/>
 	<meta name="author" content="Thunderous Echo"/>
-    <meta name="keywords" content=""/>
+    <meta name="keywords" content="missions, planning, graphics"/>
     <meta name="msapplication-config" content="none"/>
 	
     <link rel="shortcut icon" href="favicon.ico"/>
@@ -29,8 +29,9 @@
 </head>
 <body>
 	<div class="menu" style="text-align:center; font-size:x-large;">
-		<a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Forum Thread/Rules</a>
-		<a href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator">Source</a>
+		<a title="Kerbaltek Home" href="/">Home</a>
+        <a onclick="window.open(this.href);return false;" href="http://forum.kerbalspaceprogram.com/threads/102508">Forum Thread/Rules</a>
+		<a onclick="window.open(this.href);return false;" href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator">Source</a>
 		<div style="clear:both;"></div>
 	</div>
 	
@@ -88,7 +89,7 @@
 				<h1>Help</h1>
 				<p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(4)"/> Help</p>
 				<p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"/> Hotkeys</p>
-				<p><a href="http://forum.kerbalspaceprogram.com/threads/102508-How-to-show-What-you-did-Mission-Profile-Notation">Rules</a></p>
+				<p><a onclick="window.open(this.href);return false;" href="http://forum.kerbalspaceprogram.com/threads/102508">Rules</a></p>
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Model Lists</h1>
