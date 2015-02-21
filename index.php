@@ -37,16 +37,16 @@
 	
 	<div id = "craftModelSel" class = "sel" style = "text-align: left; left: 0%">
 		<h4>Craft Models:</h4>
-		<input type = "button" value = "Hide" style = "height:20px" onclick="setPopout(2)"></input>
+		<input type = "button" value = "Hide" style = "height:20px" onclick="setPopout(2)" />
 		<div id = "craftSel"></div>
-		<section><input type = "button" value = "+" style = "height:20px" onclick="createCraftModel(this)"></input></section>
+		<input type = "button" value = "+ Model" style = "height:20px" onclick="createCraftModel(this)" />
 	</div>
 	<div id = "planetModelSel" class = "sel" style = "text-align: left; left: 100%; transform: translate(-100%, 0%);">
 		<h4>Planet Models:</h4>
 		<input type = "button" value = "Hide" style = "height:20px" onclick="setPopout(3)"></input>
-		<input type = "button" value = "Restore defaults" style = "height:20px" onclick="resetPlanetModels(this)"></input>
+		<input type = "button" value = "Restore defaults" style = "height:20px" onclick="resetPlanetModels(this)" />
 		<div id = "planetSel"></div>
-		<section><input type = "button" value = "+" style = "height:20px" onclick="createPlanetModel(this)"></input></section>
+		<input type = "button" value = "+ Model" style = "height:20px" onclick="createPlanetModel(this)" />
 	</div>
 	
 	<div style= "display: block">
@@ -56,21 +56,8 @@
 		style= "border:1px solid #6c823d; 
 		text-align: center; margin-top: 5px"
 		></canvas>
-		<!--<img src="icon/arrow-down.png" id = "arrow-down" style=" display:none">
-		<img src="icon/arrow-up.png" id = "arrow-up" style=" display:none">
-		<img src="icon/arrow-left.png" id = "arrow-left" style=" display:none">
-		<img src="icon/arrow-right.png" id = "arrow-right" style=" display:none">
-		<img src="icon/arrow-cw.png" id = "arrow-cw" style=" display:none">
-		<img src="icon/arrow-ccw.png" id = "arrow-ccw" style="display:none">-->
 	</div>
 		<div id = "windowButtons" style= "text-align: center; display: table; margin: auto">
-			<section style= "text-align: left; display: table-cell">
-				<h1>Edit</h1>
-				<p><input type = "checkbox" id="craftEditShow" value = "Crafts" onclick = "setWindow(0)"/> Crafts</p>
-				<p><input type = "checkbox" id="craftEditShow" value = "Craft Models" onclick = "setWindow(5)"/> Craft Models</p>
-				<p><input type = "checkbox" id="planetEditShow" value = "Planets" onclick = "setWindow(1)"/> Planets</p>
-				<p><input type = "checkbox" id="craftEditShow" value = "Planet Models" onclick = "setWindow(6)"/> Planet Models</p>
-			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>View</h1>
 				Size:  <input id="width" type = "text" size = "4" onchange = "changeWidth(this)" value = "1000"/> x <input id="height" type = "text" size = "4" onchange = "changeHeight(this)" value="500" />
@@ -88,28 +75,34 @@
 			<section style= "text-align: left; display: table-cell">
 				<h1>Help</h1>
 				<p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(4)"/> Help</p>
+				<p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(2)"/> FAQs</p>
 				<p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"/> Hotkeys</p>
 				<p><a onclick="window.open(this.href);return false;" href="http://forum.kerbalspaceprogram.com/threads/102508">Rules</a></p>
 			</section>
 			<section style= "text-align: left; display: table-cell">
-				<h1>Model Lists</h1>
-				<p><input id = "showCraftModelList" type = "checkbox" onclick = "setPopout(0)"/> Craft Models</p>
-				<p><input id = "showPlanetModelList" type = "checkbox" onclick = "setPopout(1)"/> Planet Models</p>
-			</section>
-			<section style= "text-align: left; display: table-cell" id="warningSection">
-				<h1>Errors</h1>
-				<ul id = "warnings" style = "fill-color: #ffffff; width: 200px"></ul>
+				<h1>Model List Sidebars</h1>
+				<p><input id = "showCraftModelList" type = "checkbox" onclick = "setPopout(0)" checked /> Craft Models</p>
+				<p><input id = "showPlanetModelList" type = "checkbox" onclick = "setPopout(1)" checked /> Planet Models</p>
+				<h3>Editing Sections</h3>
+				<p><input type = "checkbox" id="craftEditShow" value = "Crafts" onclick = "setWindow(0)" checked /> Crafts</p>
+				<p><input type = "checkbox" id="craftEditShow" value = "Craft Models" onclick = "setWindow(5)" checked /> Craft Models</p>
+				<p><input type = "checkbox" id="planetEditShow" value = "Planets" onclick = "setWindow(1)" checked /> Planets</p>
+				<p><input type = "checkbox" id="craftEditShow" value = "Planet Models" onclick = "setWindow(6)" checked /> Planet Models</p>
 			</section>
 		</div>
+		<section style= "background-color: #ffff00; display: block" id="warningSection">
+			<h1>Errors</h1>
+			<ul id = "warnings"></ul>
+		</section>
 		<section style= "text-align: center; display: block" id = "craftEdit">
 			<h5 id = "selCraft">Select a craft to edit</h5>
 			<div id= "craft">
 				<h1 id="label2">Untitled Space Craft</h1>
 				<input type = "button" value = "Delete" onclick="deleteCraftButton(this)" align = "text-align: center"/>
 				<input type = "button" value = "Recenter" onclick="craftRecenterButton(this)" align = "text-align: center"/>
-				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false" align = "text-align: center"/>
+				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false; updateSelector();" align = "text-align: center"/>
 				
-				<section style = "background-color: #ffffff; text-align: center">
+				<section style = "text-align: center">
 					<h3>Appearance</h3>
 					<p>Type: <select id="typeSel" onchange="setCraftType(this)">
 						<option value = "t0">Transfer</option>
@@ -128,11 +121,11 @@
 					</div>
 				</section>
 				<p></p>
-				<section style = "display: inline-block; background-color: #ffffff">
+				<section style = "display: inline-block">
 					<p id="label4" style = "display: inline-block">Model:</p>
 					<button id="label5" style = "display: inline-block" onclick = "setCraftModelToCurrent()">Change to selected model: "Untitled Space Craft"</button>
 				</section>
-				<section style = "display: inline-block; background-color: #ffffff">
+				<section style = "display: inline-block">
 					<p id="label8" style = "display: inline-block">Parent Planet:</p>
 					<button id="label9" onclick = "setCraftPlanetToCurrent(true)" style = "display: inline-block">Change to selected planet: "Untitled Planet"</button>
 					<button onclick = "setCraftPlanetToCurrent(false)" style = "display: inline-block">Clear</button>
@@ -144,7 +137,7 @@
 			<div id= "craft2">
 				<h1 id="label3">Untitled Space Craft</h1>
 				<input id = "deleteCraftModelButton" type = "button" value = "Delete" onclick="deleteCraftModelButton(this)" align = "text-align: center"/>
-				<input type = "button" value = "Deselect" onclick="currentCraftModel = false; updateSelector();" align = "text-align: center"/>
+				<input type = "button" value = "Deselect" onclick="currentCraftModel = false; craftModelShown = false; updateSelector();" align = "text-align: center"/>
 				<p>Name:   <input id="name2" type = "text" onchange = "name2(this)"/></p>
 				<p>Color:   <input id="color2" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerClosable:true,onImmediateChange:'updateColor(this, 2);'}"></p>
 				<p>Line Width:   <input id="width2" type = "text" size = "2" onchange = "width2(this)"></input></p>
@@ -156,9 +149,8 @@
 				<div id= "planet" align = "text-align: right">
 					<input type = "button" value = "Delete" onclick="deletePlanetButton(this)" align = "text-align: center"/>
 					<input type = "button" value = "Recenter" onclick="planetRecenterButton(this)" align = "text-align: center"/>
-					<input type = "button" value = "Deselect" onclick="currentPlanet = false; planetShown = false" align = "text-align: center"/>
-					<p></p>
-					<section style = "display: inline-block; background-color: #ffffff">
+					<input type = "button" value = "Deselect" onclick="currentPlanet = false; planetShown = false; updateSelector();" align = "text-align: center"/>
+					<section style = "display: inline-block">
 						<p id="label6" style = "display: inline-block">Model:</p>
 						<button id="label7" onclick = "setPlanetModelToCurrent()" style = "display: inline-block">Change to selected model: "Untitled Planet"</button>
 					</section>
@@ -169,7 +161,7 @@
 				<h1 id="label0">Untitled Planet</h1>
 				<div id= "planet2" align = "text-align: right">
 					<input id = "deletePlanetModelButton" type = "button" value = "Delete" onclick="deletePlanetModelButton(this)" align = "text-align: center"/>
-					<input type = "button" value = "Deselect" onclick="currentPlanetModel = false; updateSelector();" align = "text-align: center"/>
+					<input type = "button" value = "Deselect" onclick="currentPlanetModel = false; planetModelShown = false; updateSelector();" align = "text-align: center"/>
 					<p>Name:   <input id="name1" type = "text" onchange = "name1(this)"/></p>
 					<p>Abbreviation:   <input id="abbr" type = "text" size = "2" onchange = "abbr(this)"/></p>
 					<p>Outline Color:   <input id="color0" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 0);'}"/></p>
@@ -183,9 +175,15 @@
 					<li>Force Undocking/Docking: Hold <strong>Alt</strong> while dragging a craft's start or end point. This will snap it along a craft's line instead of its start or end point as normally done with crafts of two different models. This is only necessary when docking a craft to a craft of the same model.</li>
 				</ul>
 		</section>
+		<section style= "text-align: left; display: block; background-color: #ffffff" id = "faq" >
+			<h1>FAQs</h1>
+			<h4>How do I add a craft or planet?</h4>
+			<p>To create a craft or planet, click the "+" in the "Craft Models" or "Planet Models" list under the model you want to add an instance of.</p>
+		</section>
 		<section style= "text-align: left; display: block; background-color: #ffffff" id = "instructions" >
 			<h1>Help</h1>
 				<h2>Crafts and Planets</h2>
+					<p>To create a craft or planet, click the "+" in the "Craft Models" or "Planet Models" list under the model you want to add an instance of.</p>
 					<h4>Crafts</h4>
 					<p>One "Craft" is one part of the path a represented vessel (or instance of a represented vessel) takes and that appears in the Overview. Asteroids are sometimes crafts.</p>
 					<ul>
@@ -199,7 +197,7 @@
 					<h4>Planets</h4>
 					<p>One "Planet" is one instance of a planet that appears in the Overview and interacts with crafts. A "Planet" represents one celestial body (anything with an SOI and gravity, plus sometimes asteroids).</p>
 					<h4>Craft and Planet Editing Sections</h4>
-						<p>To open this section, select a craft or planet by clicking on it or by clicking on its instance number in the "Craft Models" or "Planet Models" lists under its model, then click "Crafts" or "Planets" under "Edit".</p>
+						<p>To open this section, select a craft or planet by clicking on it or by clicking on its instance number in the "Craft Models" or "Planet Models" lists under its model, then check "Crafts" or "Planets" under "Editing Sections". The section will open at the instance number of this craft in the model list.</p>
 						<ul>
 							<li>"Delete" deletes this craft or planet.</li>
 							<li>"Recenter" moves this craft planet to the center of the screen.</li>
@@ -218,12 +216,13 @@
 								</ul>
 						</ul>
 				<h2>Models</h2>
+					<p>To create a model, click the giant "+ Model" at the bottom of the "Craft Models" or "Planet Models" list.</p>
 					<p>Each craft or planet on the screen derives its appearance and name from a model. Because all Kerbins use the same model, all Kerbins will look the same. Likewise, all copies of the same craft will look the same. Models appear in the key if they are in use.</p>
 					<p>One "Craft Model" is one craft. If you launch two "Kerbal X"s, they can be represented by the same model(See Hotkeys). Asteroids are sometimes crafts.</p>
 					<p>One "Planet Model" is one celestial body (anything with an SOI and gravity, plus sometimes asteroids).</p>
 					<p>To create a craft or planet that uses a certain model, click the "+" in the "Craft Models" or "Planet Models" list under the model you want to add an instance of. You can change the model that an existing craft or planet uses through its editing section.</p>
 					<h4>Model Editing Sections</h4>
-						<p>To open this section, select a craft model or planet model by clicking on it in the "Craft Models" or "Planet Models" lists, then click "Craft Models" or "Planet Models" under "Edit".</p>
+						<p>To open this section, select a craft model or planet model by clicking on it in the "Craft Models" or "Planet Models" lists, then check "Craft Models" or "Planet Models" under "Editing Sections". The section will open at this model in the model list.</p>
 						<ul>
 							<li>"Delete" deletes this model, if allowed. You cannot delete any of the stock planets and must have at least 1 craft model at all times. If you cannot delete this model, this button will appear gray.</li>
 							<li>"Deselect" deselects this model. </li>

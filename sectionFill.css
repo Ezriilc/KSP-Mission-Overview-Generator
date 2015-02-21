@@ -1,5 +1,17 @@
 section {
+	background-color: #ffffff;
+}
+
+div section{
 	background-color: #e8e8e8;
+}
+
+div section section{
+	background-color: #d0d0d0;
+}
+
+div section section section{
+	background-color: #b8b8b8;
 }
 
 .rounded{

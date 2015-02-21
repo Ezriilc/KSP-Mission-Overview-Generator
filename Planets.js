@@ -43,6 +43,7 @@ function resetPlanetModels(button){
 		entry.radius = 32 * Math.pow(2, -entry.model.hierarchyIndex);
 	});
 	planetShown = false;
+	planetModelShown = false;
 	updateSelector();
 }
 
@@ -106,7 +107,8 @@ function drawPlanets(){
 			updateSelector();
 			$("#label1").show();
 			$("#planet").show();
-			document.getElementById("label1").innerHTML = currentPlanet.model.fullName  + " (Instance)";
+			//document.getElementById("label1").innerHTML = currentPlanet.model.fullName  + " (Instance)";
+			document.getElementById("label1").innerHTML = currentPlanet.model.fullName + " ("+ (currentPlanet.model.children.indexOf(currentPlanet) + 1) +")";
 			$("#selPlanet").hide();
 			$("#selPlanet2").hide();
 			planetShown = true;
@@ -166,7 +168,8 @@ function ind(textbox){
 
 function name1(textbox){
 	currentPlanetModel.fullName = document.getElementById('name1').value;
-	updateSelector();
+	//updateSelector();
+	planetModelShown = false;
 	planetShown = false;
 }
 

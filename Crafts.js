@@ -351,7 +351,8 @@ function drawCrafts(){
 			$("#label2").show();
 			$("#craft").show();
 			
-			document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
+			//document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
+			document.getElementById("label2").innerHTML = currentCraft.model.name  + " ("+ (currentCraft.model.children.indexOf(currentCraft) + 1) +")";
 			$("#selCraft").hide();
 			craftShown = true;
 			
@@ -440,8 +441,9 @@ function drawCrafts(){
 
 function name2(textbox){
 	currentCraftModel.name = document.getElementById('name2').value;
-	document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
+	//document.getElementById("label2").innerHTML = currentCraft.model.name  + " (Instance)";
 	craftModelShown = false;
+	craftShown = false;
 	//updateSelector();
 }
 function width2(textbox){

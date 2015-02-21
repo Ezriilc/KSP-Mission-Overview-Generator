@@ -11,6 +11,8 @@ var currentPlanetModel = false;
 
 var shouldDrawGridlines = false;
 
+var lastMouseEvent = false;
+
 //var keyEnum = {Alt:0};
 //var keyArray = [false];
 
@@ -19,7 +21,6 @@ var alt = false;
 $(document).ready(function() {
 
 	setWindow(-1);
-	setPopout(-1);
 	initiatePlanets();
 	initiateCrafts();
 	var m = new CraftModel("Untitled Space Craft", '#000000', 3);
@@ -30,8 +31,7 @@ $(document).ready(function() {
 	var c = new Craft(m);
 	c.parentPlanet = p;
 	c.type = 2;
-	//c.endArrow = true;
-	drawAll();
+	//drawAll();
 	updateSelector();
 
 	var rect = document.getElementById("myCanvas").getBoundingClientRect();
@@ -41,6 +41,7 @@ $(document).ready(function() {
 	}
 	$(document).mousemove(function(event) {
 		alt = event.altKey;
+		lastMouseEvent = event;
 		if (click){drag();}
 		drawAll();
 	});
@@ -73,8 +74,8 @@ $(document).ready(function() {
 function drawAll(){
 	$("#warnings").empty();
 
-	pageMouseX = event.pageX;
-	pageMouseY = event.pageY;
+	pageMouseX = lastMouseEvent.pageX;
+	pageMouseY = lastMouseEvent.pageY;
 	
 	var rect = document.getElementById("myCanvas").getBoundingClientRect();
 	canvasX = rect.left;
@@ -84,13 +85,11 @@ function drawAll(){
 	midScreenPos[1] = screenPos[1] + rect.height / 2 + 0.5;
 	drawColor = '#ffffff';
 	fillRect(0, 0, rect.width, rect.height);
-	
 	drawGridlines();
 
 	drawPlanets();
 	drawCrafts();
 	drawKey();
-	//drawToolbar();
 	
 	drawHighlightLocal();
 	if($("#warnings:empty").length > 0){ //if there is at least 1 empty "#warnings"
