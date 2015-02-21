@@ -29,9 +29,20 @@
 </head>
 <body>
 	<div class="menu" style="text-align:center; font-size:x-large;">
-		<a title="Kerbaltek Home" href="/">Home</a>
-        <a onclick="window.open(this.href);return false;" href="http://forum.kerbalspaceprogram.com/threads/102508">Forum Thread/Rules</a>
-		<a onclick="window.open(this.href);return false;" href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator">Source</a>
+		<a
+            title="Return to Kerbaltek Home"
+            href="/"
+        >Home</a>
+        <a
+            title="Discuss the KSP MOG on the KSP Forum. Report bugs here!"
+            href="http://forum.kerbalspaceprogram.com/threads/102508"
+            onclick="window.open(this.href);return false;"
+        >Forum Thread/Rules</a>
+		<a
+            title="The source for the KSP MOG on GitHub."
+            href="https://github.com/Ezriilc/KSP-Mission-Overview-Generator"
+            onclick="window.open(this.href);return false;"
+        >Source</a>
 		<div style="clear:both;"></div>
 	</div>
 	
