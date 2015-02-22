@@ -59,7 +59,12 @@ function updateSelector(){
 				$("#cmodelsec" + ind).append("<button onclick='currentCraft = craftModels[" + ind + "].children[" + (v-1) + "]; craftShown = false' style = 'color:" + entry.color + "'>" + v + "</button>");
 			}
 		});
-		$("#cmodelsec" + ind).append("<button onclick='new Craft(craftModels[" + ind + "]); updateSelector()'>+</button>");
+		$("#cmodelsec" + ind).append("<button onclick='createCraft(this, craftModels[" + ind + "], 0); updateSelector()'>+</button>");
+			/*$("#cmodelsec" + ind).append("<p><button onclick='createCraft(this, craftModels[" + ind + "], 0); updateSelector()'>+ Transfer</button></p>");
+			$("#cmodelsec" + ind).append("<p><button onclick='createCraft(this, craftModels[" + ind + "], 1); updateSelector()'>+ Landing</button></p>");
+			$("#cmodelsec" + ind).append("<p><button onclick='createCraft(this, craftModels[" + ind + "], 2); updateSelector()'>+ Ascent</button></p>");
+			$("#cmodelsec" + ind).append("<p><button onclick='createCraft(this, craftModels[" + ind + "], 3); updateSelector()'>+ Orbit</button></p>");
+			$("#cmodelsec" + ind).append("<p><button onclick='createCraft(this, craftModels[" + ind + "], 4); updateSelector()'>+ Flyby</button></p>");*/
 		ind++;
 	});
 	$('#planetModelSel').append($('#planetModelEdit'));		
@@ -108,7 +113,7 @@ function updateSelector(){
 				$("#pmodelsec" + ind).append("<button onclick='currentPlanet = planetModels[" + ind + "].children[" + (v-1) + "]; planetShown = false' style = 'color:" + entry.fringeColor + "'>" + v + "</button>");
 			}
 		});
-		$("#pmodelsec" + ind).append("<button onclick='new Planet(planetModels[" + ind + "]); updateSelector()'>+</button>");
+		$("#pmodelsec" + ind).append("<button onclick='createPlanet(this, planetModels[" + ind + "]); updateSelector();'>+</button>");
 		ind++;
 	});
 	window.scrollTo(x, y);
@@ -158,6 +163,7 @@ function setWindow(id){
 			//$('#craftModelEdit').hide();
 			//$('#planetModelEdit').hide();
 			$('#hotkeys').hide();
+			$('#video').hide();
 		break;
 		case 0:
 			if($('#craftEdit').is(':visible')){
@@ -184,12 +190,11 @@ function setWindow(id){
 			}
 			break;
 		case 3:
-			if($('#trajectoryEdit').is(':visible')){
-				$('#trajectoryEdit').hide();
+			if($('#video').is(':visible')){
+				$('#video').hide();
 			}
 			else{
-				$('#trajectoryEdit').show();
-				$('#warningSection').after($('#trajectoryEdit'));
+				$('#video').show();
 			}
 			break;
 		case 4:

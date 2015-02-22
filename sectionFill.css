@@ -23,26 +23,40 @@ h1{
 }
 
 div.sel {
-  position: absolute;
+  position: fixed;
   top: 0%;
-  /*height: 100%;
-  left: 50%;
+  height: 100%;
   overflow-y: auto;
-  overflow-x: hidden;*/
-  background-color: #FFFFFF; 
-  /*transform: translate(0%, -50%);*/
+  /*overflow-x: hidden;*/
+  /*background-color: #FFFFFF;*/ 
   padding: 5px;
   
-  border-radius:8px;
-  border-width: 1px;
+  background-color:transparent;
+  background-image:url(graphics/trans-mask-white.png);
+  background-repeat:repeat-x;
+  background-position:center 66%;
   
   text-align: center;
+  
+  width: 256px;
 }
 
 button{
 	text-align: center;
-	padding: 1px;
+	padding: 0;
 }
+
+.ic {
+	width: 32px;
+	height: 32px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	margin-bottom: -5px;
+}
+
+.container {position: relative; width: 32px; height: 32px; margin: 0px; display: inline-block; border-width: 1px; border-radius: 5px;}
+.check{position: absolute; bottom: -4px; right: -8px;}
 
 .center{
 	margin-left:auto; 

@@ -57,11 +57,6 @@ function initiateCrafts(){
 	$("#craftMore").hide();
 }
 
-function setCraftType(selector){
-	currentCraft.type = Number($("#typeSel").val().substring(1, 2));
-	craftShown = false;
-}
-
 function deleteCraftButton(button){
 	crafts.splice(crafts.indexOf(currentCraft), 1);
 	currentCraft.model.children.splice(currentCraft.model.children.indexOf(currentCraft), 1);
@@ -355,8 +350,12 @@ function drawCrafts(){
 			document.getElementById("label2").innerHTML = currentCraft.model.name  + " ("+ (currentCraft.model.children.indexOf(currentCraft) + 1) +")";
 			$("#selCraft").hide();
 			craftShown = true;
+			//$("#typeSel").val("t" + currentCraft.type);
 			
-			$("#typeSel").val("t" + currentCraft.type);
+			var radioButtonToCheck = $("input[value='t" + currentCraft.type + "']");
+			if(radioButtonToCheck !=null){
+				radioButtonToCheck.prop("checked",true);
+			}
 			
 			document.getElementById("ccwCheckbox").checked = currentCraft.ccw;
 			document.getElementById("aerobrakeCheckbox").checked = currentCraft.aerobrake;
@@ -465,14 +464,42 @@ function createCraftModel(button){
 	new CraftModel("Untitled Space Craft", '#' + Math.round(Math.random() * 255 * 256 * 256).toString(16).toUpperCase(), 3);
 }
 
+function createCraft(button, model, type){
+	var c = new Craft(model);
+	c.endSelected = true;
+	if (currentCraft){
+		c.startPosition = currentCraft.endPosition.slice(0);
+	}
+	else{
+		c.startPosition[0] = randomRange(midScreenPos[0], -midScreenPos[0]);
+		c.startPosition[1] = randomRange(midScreenPos[1], -midScreenPos[1] + 64);
+	}
+	currentCraft = c;
+	click = true;
+	if (currentPlanet){
+		c.parentPlanet = currentPlanet;
+	}
+	else{
+		c.parentPlanet = planets[0];
+	}
+	c.type = type;
+	craftShown = false;
+}
+
+function randomRange(min, max){
+	return Math.random() * (max - min) + min;
+}
+
 function selectCrafts(){
 	if (currentCraft){
-		if(distance(currentCraft.startPosition[0] + midScreenPos[0], currentCraft.startPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < currentCraft.radius){
+		if((distance(currentCraft.startPosition[0] + midScreenPos[0], currentCraft.startPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < currentCraft.radius) ||
+			(distance(currentCraft.endPosition[0] + midScreenPos[0], currentCraft.endPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < currentCraft.radius)){
 			deselectAll();
+		}
+		if(distance(currentCraft.startPosition[0] + midScreenPos[0], currentCraft.startPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < currentCraft.radius){
 			currentCraft.startSelected = true;
 		}
 		if(distance(currentCraft.endPosition[0] + midScreenPos[0], currentCraft.endPosition[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < currentCraft.radius){
-			deselectAll();
 			currentCraft.endSelected = true;
 		}
 	}
@@ -516,8 +543,18 @@ function deselectCrafts(){
 				entry.startPosition = entry.parentPlanet.position.slice(0);
 			}
 		}
+		entry.endPosition[0] = rangify(entry.endPosition[0], -midScreenPos[0], midScreenPos[0]);
+		entry.endPosition[1] = rangify(entry.endPosition[1], -midScreenPos[1], midScreenPos[1]);
+		entry.startPosition[0] = rangify(entry.startPosition[0], -midScreenPos[0], midScreenPos[0]);
+		entry.startPosition[1] = rangify(entry.startPosition[1], -midScreenPos[1], midScreenPos[1]);
 	});
 	detectCraftRelationships();
+}
+
+function rangify(val, min, max){
+	val = Math.max(val, min);
+	val = Math.min(val, max);
+	return val;
 }
 
 function dragCrafts(){

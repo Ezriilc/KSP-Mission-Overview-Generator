@@ -56,6 +56,7 @@ $(document).ready(function() {
 		click = false;
 		mouseRelease();
 	});
+
 	//$(document).keydown(function(event) {
 	/*document.onkeydown = function(event){  
 		if(event.keyCode == 18){ //alt
@@ -83,6 +84,7 @@ function drawAll(){
 		
 	midScreenPos[0] = screenPos[0] + rect.width / 2 + 0.5;
 	midScreenPos[1] = screenPos[1] + rect.height / 2 + 0.5;
+	
 	drawColor = '#ffffff';
 	fillRect(0, 0, rect.width, rect.height);
 	drawGridlines();

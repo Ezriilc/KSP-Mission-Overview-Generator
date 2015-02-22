@@ -5,11 +5,11 @@ var canvasX = 0;
 var canvasY = 0;
 
 function locateMouseX(){
-	return pageMouseX - window.scrollX - canvasX;
+	return pageMouseX - window.pageXOffset - canvasX;
 }
 
 function locateMouseY(){
-	return pageMouseY - window.scrollY - canvasY;
+	return pageMouseY - window.pageYOffset - canvasY;
 }
 
 function containsMouse(x, y, width, height){

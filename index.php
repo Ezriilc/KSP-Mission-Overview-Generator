@@ -60,6 +60,13 @@
 		<input type = "button" value = "+ Model" style = "height:20px" onclick="createPlanetModel(this)" />
 	</div>
 	
+	<section style= "text-align: center; display: block;" id = "video" >
+		<h1> Video tutorial </h1>
+		<iframe width="1000" height="562"
+			src="http://www.youtube.com/embed/949EfUAa47Y">
+		</iframe>
+	</section>
+	
 	<div style= "display: block">
 		<canvas class = "rounded"
 		id="myCanvas" 
@@ -85,6 +92,7 @@
 			</section>
 			<section style= "text-align: left; display: table-cell">
 				<h1>Help</h1>
+				<p><input type = "checkbox" id="videoShow" value = "Help" onclick = "setWindow(3)"/> Video Tutorial</p>
 				<p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(4)"/> Help</p>
 				<p><input type = "checkbox" id="instructionsShow" value = "Help" onclick = "setWindow(2)"/> FAQs</p>
 				<p><input type = "checkbox" id="rulesShow" value = "Rules" onclick = "setWindow(7)"/> Hotkeys</p>
@@ -113,33 +121,70 @@
 				<input type = "button" value = "Recenter" onclick="craftRecenterButton(this)" align = "text-align: center"/>
 				<input type = "button" value = "Deselect" onclick="currentCraft = false; craftShown = false; updateSelector();" align = "text-align: center"/>
 				
-				<section style = "text-align: center">
-					<h3>Appearance</h3>
-					<p>Type: <select id="typeSel" onchange="setCraftType(this)">
-						<option value = "t0">Transfer</option>
-						<option value = "t1">Landing</option>
-						<option value = "t2">Ascent</option>
-						<option value = "t3">Orbit</option>
-						<option value = "t4">Flyby</option>
-					</select></p>
-					<div style = "text-align: left">
-						<p id = "ccwIn"><input id = "ccwCheckbox" type = "checkbox" onclick = "currentCraft.ccw = !currentCraft.ccw" checked></input>Counter-clockwise</p>
-						<p id = "aerobrakeIn"><input id = "aerobrakeCheckbox" type = "checkbox" onclick = "currentCraft.aerobrake = !currentCraft.aerobrake"></input>Aerobraking</p>
-						<p id = "destroyIn"><input id = "destroyCheckbox" type = "checkbox" onclick = "currentCraft.destroy = !currentCraft.destroy"></input>Destroy</p>
-						<p id = "refuelIn"><input id = "refuelCheckbox" type = "checkbox" onclick = "currentCraft.refuel = !currentCraft.refuel"></input>Refuelling</p>
-						<p id = "startIn"><input id = "startCheckbox" type = "checkbox" onclick = "currentCraft.startArrow = !currentCraft.startArrow"></input>There-and-Back</p>
-						<!--<p><button>▲</button><button>▼</button> Chronological label <canvas id = "chronologicalIndexPreview" width = "12" height = "12"></canvas></p>-->
-					</div>
-				</section>
+				<hr></hr>
+				
+				<div class="container" title="Transfer">
+					<img src="images/transfer.png" style = "border-radius: 5px; background-color: white" class = "ic"/> 
+					<input id = "transferRadio" value = "t0" name = "type" type="radio" class="check" onclick = "currentCraft.type = 0; craftShown = false;" checked />
+				</div>
+				<div class="container" title="Landing">
+					<img src="images/landing.png" style = "border-radius: 5px; background-color: white" class = "ic"/> 
+					<input id = "landingRadio" value = "t1" name = "type" type="radio" class="check" onclick = "currentCraft.type = 1; craftShown = false;" />
+				</div>
+				<div class="container" title="Ascent">
+					<img src="images/ascent.png" style = "border-radius: 5px; background-color: white" class = "ic"/> 
+					<input id = "ascentRadio" value = "t2" name = "type" type="radio" class="check" onclick = "currentCraft.type = 2; craftShown = false;" />
+				</div>
+				<div class="container" title="Orbit">
+					<img src="images/orbit.png" style = "border-radius: 5px; background-color: white" class = "ic"/> 
+					<input id = "orbitRadio" value = "t3" name = "type" type="radio" class="check" onclick = "currentCraft.type = 3; craftShown = false;" />
+				</div>
+				<div class="container" title="Flyby">
+					<img src="images/flyby.png" style = "border-radius: 5px; background-color: white" class = "ic"/> 
+					<input id = "flybyRadio" value = "t4" name = "type" type="radio" class="check" onclick = "currentCraft.type = 4; craftShown = false;" />
+				</div>
+
+				<hr></hr>
+				
+				<div class="container" id = "ccwIn" title="Flyby direction">
+					<img src="images/ccw.png" style = "border-radius: 5px" class = "ic"/> 
+					<input id = "ccwCheckbox" type="checkbox" class="check" onclick = "currentCraft.ccw = !currentCraft.ccw" />
+				</div>
+				<div class="container" id = "aerobrakeIn" title="Aerobraking">
+					<img src="images/aerobrake.png" style = "border-radius: 5px" class = "ic"/> 
+					<input id = "aerobrakeCheckbox" type="checkbox" class="check" onclick = "currentCraft.aerobrake = !currentCraft.aerobrake" />
+				</div>
+				<div class="container" id = "destroyIn" title="Destroy">
+					<img src="images/destroy.png" style = "border-radius: 5px" class = "ic"/> 
+					<input id = "destroyCheckbox" type="checkbox" class="check" onclick = "currentCraft.destroy = !currentCraft.destroy" />
+				</div>
+				<div class="container" id = "refuelIn" title="Refuel">
+					<img src="images/refuel.png" style = "border-radius: 5px" class = "ic"/> 
+					<input id = "refuelCheckbox" type="checkbox" class="check" onclick = "currentCraft.refuel = !currentCraft.refuel" />
+				</div>
+				<div class="container" id = "startIn" title="There-and-back">
+					<img src="images/there-and-back.png" style = "border-radius: 5px" class = "ic"/> 
+					<input id = "startCheckbox" type="checkbox" class="check" onclick = "currentCraft.startArrow = !currentCraft.startArrow" />
+				</div>
+				<!--<p><button>▲</button><button>▼</button> Chronological label <canvas id = "chronologicalIndexPreview" width = "12" height = "12"></canvas></p>-->
 				<p></p>
-				<section style = "display: inline-block">
+				
+				<section style = "text-align: center">
+					<h3>Add Next Craft</h3>
+					<button onclick='createCraft(this, currentCraft.model, 0); updateSelector()' title="Transfer"><img class = "ic" src = "images/transfer.png"/></button>
+					<button onclick='createCraft(this, currentCraft.model, 1); updateSelector()' title="Landing"><img class = "ic" src = "images/landing.png" /></button>
+					<button onclick='createCraft(this, currentCraft.model, 2); updateSelector()' title="Ascent"><img class = "ic" src = "images/ascent.png" /></button>
+					<button onclick='createCraft(this, currentCraft.model, 3); updateSelector()' title="Orbit"><img class = "ic" src = "images/orbit.png" /></button>
+					<button onclick='createCraft(this, currentCraft.model, 4); updateSelector()' title="Flyby"><img class = "ic" src = "images/flyby.png" /></button>
+				</section>
+				
+				<section style = "display: block">
 					<p id="label4" style = "display: inline-block">Model:</p>
 					<button id="label5" style = "display: inline-block" onclick = "setCraftModelToCurrent()">Change to selected model: "Untitled Space Craft"</button>
 				</section>
-				<section style = "display: inline-block">
+				<section style = "display: block">
 					<p id="label8" style = "display: inline-block">Parent Planet:</p>
 					<button id="label9" onclick = "setCraftPlanetToCurrent(true)" style = "display: inline-block">Change to selected planet: "Untitled Planet"</button>
-					<button onclick = "setCraftPlanetToCurrent(false)" style = "display: inline-block">Clear</button>
 				</section>
 			</div>
 		</section>
@@ -149,8 +194,8 @@
 				<h1 id="label3">Untitled Space Craft</h1>
 				<input id = "deleteCraftModelButton" type = "button" value = "Delete" onclick="deleteCraftModelButton(this)" align = "text-align: center"/>
 				<input type = "button" value = "Deselect" onclick="currentCraftModel = false; craftModelShown = false; updateSelector();" align = "text-align: center"/>
-				<p>Name:   <input id="name2" type = "text" onchange = "name2(this)"/></p>
-				<p>Color:   <input id="color2" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerClosable:true,onImmediateChange:'updateColor(this, 2);'}"></p>
+				<p><input id="name2" type = "text" onchange = "name2(this)"/></p>
+				<p><input id="color2" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black',pickerClosable:true,onImmediateChange:'updateColor(this, 2);'}"></p>
 				<p>Line Width:   <input id="width2" type = "text" size = "2" onchange = "width2(this)"></input></p>
 			</div>
 		</section>
@@ -173,24 +218,12 @@
 				<div id= "planet2" align = "text-align: right">
 					<input id = "deletePlanetModelButton" type = "button" value = "Delete" onclick="deletePlanetModelButton(this)" align = "text-align: center"/>
 					<input type = "button" value = "Deselect" onclick="currentPlanetModel = false; planetModelShown = false; updateSelector();" align = "text-align: center"/>
-					<p>Name:   <input id="name1" type = "text" onchange = "name1(this)"/></p>
-					<p>Abbreviation:   <input id="abbr" type = "text" size = "2" onchange = "abbr(this)"/></p>
-					<p>Outline Color:   <input id="color0" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 0);'}"/></p>
-					<p>Fill Color:   <input id="color1" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 1);'}"/></p>
+					<p><input id="name1" type = "text" onchange = "name1(this)" size = "18" /><input id="abbr" type = "text" size = "2" onchange = "abbr(this)"/></p>
+					<p><input id="color0" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 0);'}"/></p>
+					<p><input id="color1" class="color {hash:true,caps:false,pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black', pickerClosable:true, required:false, onImmediateChange:'updateColor(this, 1);'}"/></p>
 					<p>Hierarchial Index:   <input id="ind" type = "text" size = "2" onchange = "ind(this)"/></p>
 				</div>
 			</section>
-		<section style= "text-align: left; display: block; background-color: #ffffff" id = "hotkeys" >
-			<h1>Hotkeys</h2>
-				<ul>
-					<li>Force Undocking/Docking: Hold <strong>Alt</strong> while dragging a craft's start or end point. This will snap it along a craft's line instead of its start or end point as normally done with crafts of two different models. This is only necessary when docking a craft to a craft of the same model.</li>
-				</ul>
-		</section>
-		<section style= "text-align: left; display: block; background-color: #ffffff" id = "faq" >
-			<h1>FAQs</h1>
-			<h4>How do I add a craft or planet?</h4>
-			<p>To create a craft or planet, click the "+" in the "Craft Models" or "Planet Models" list under the model you want to add an instance of.</p>
-		</section>
 		<section style= "text-align: left; display: block; background-color: #ffffff" id = "instructions" >
 			<h1>Help</h1>
 				<h2>Crafts and Planets</h2>
@@ -279,6 +312,17 @@
 				<p>If your browser cannot save directly from the canvas, <input value = "click here" type = "button" onclick = "var canvas = document.getElementById('myCanvas'); var dataURL = canvas.toDataURL(); document.getElementById('canvasImg').src = dataURL;"></input> to generate an "img" that you should be able to save.</p>
 				<img id="canvasImg"></img>
 	</section>
+		<section style= "text-align: left; display: block; background-color: #ffffff" id = "hotkeys" >
+			<h1>Hotkeys</h2>
+				<ul>
+					<li>Force Undocking/Docking: Hold <strong>Alt</strong> while dragging a craft's start or end point. This will snap it along a craft's line instead of its start or end point as normally done with crafts of two different models. This is only necessary when docking a craft to a craft of the same model.</li>
+				</ul>
+		</section>
+		<section style= "text-align: left; display: block; background-color: #ffffff" id = "faq" >
+			<h1>FAQs</h1>
+			<h4>How do I add a craft or planet?</h4>
+			<p>To create a craft or planet, click the "+" in the "Craft Models" or "Planet Models" list under the model you want to add an instance of.</p>
+		</section>
 	<p>Mission Overview Generator release 1.0</p>
 </body>
 </html>

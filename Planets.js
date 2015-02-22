@@ -186,6 +186,14 @@ function createPlanetModel(button){
 	updateSelector();
 }
 
+function createPlanet(button, model){
+	var c = new Planet(model);
+	c.selected = true;
+	currentPlanet = c;
+	click = true;
+	planetShown = false;
+}
+
 function selectPlanets(){
 	planets.forEach(function(entry) {
 		if(distance(entry.position[0] + midScreenPos[0], entry.position[1] + midScreenPos[1], locateMouseX(), locateMouseY()) < entry.radius){
@@ -200,6 +208,8 @@ function selectPlanets(){
 function deselectPlanets(){
 	planets.forEach(function(entry) {
 		entry.selected = false;
+		entry.position[0] = rangify(entry.position[0], -midScreenPos[0], midScreenPos[0]);
+		entry.position[1] = rangify(entry.position[1], -midScreenPos[1], midScreenPos[1]);
 	});
 }
 
